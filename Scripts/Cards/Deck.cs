@@ -44,7 +44,7 @@ public class Deck
         return cards;
     }
 
-    public void UseCard(Card selectedCard, CharacterStats user, CharacterStats target)
+    public void UseCard(Card selectedCard, Battler target)
     {
         // Resolve o comportamento da carta
         CardBehavior behavior = CardResolver.Resolve(selectedCard);
@@ -52,7 +52,7 @@ public class Deck
         if (behavior != null)
         {
             // Executa a ação da carta
-            behavior.ExecuteAction(user, target);
+            behavior.ExecuteAction(target);
         }
         else
         {

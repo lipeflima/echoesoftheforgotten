@@ -32,9 +32,9 @@ public class EnemyDeckManager : MonoBehaviour
         }
     }
 
-    public void PlayCard(Card selectedCard, CharacterStats user, CharacterStats target)
+    public void PlayCard(Card selectedCard, Battler target)
     {
-        enemyDeck.UseCard(selectedCard, user, target);
+        enemyDeck.UseCard(selectedCard, target);
     }
 }
 

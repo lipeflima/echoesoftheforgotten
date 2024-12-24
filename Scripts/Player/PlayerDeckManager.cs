@@ -60,9 +60,9 @@ public class PlayerDeckManager : MonoBehaviour
         playerDeck.Shuffle();
     }
 
-    public void PlayCard(Card selectedCard, CharacterStats user, CharacterStats target)
+    public void PlayCard(Card selectedCard, Battler target)
     {
-        playerDeck.UseCard(selectedCard, user, target);
+        playerDeck.UseCard(selectedCard, target);
     }
 
     public List<Card> GetPlayerHand()

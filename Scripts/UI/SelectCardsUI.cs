@@ -58,6 +58,16 @@ public class SelectCardsUI : MonoBehaviour
         foreach(var selectedCard in cardUI.GetSelectedCards())
         {
             cardUI.HighlightCard(selectedCard, false);
+
+            foreach(var effect in selectedCard.effects)
+            {
+                if (effect.effectType == Card.CardType.Attack || effect.effectType == Card.CardType.Debuff)
+                {
+                    actionData.CombatAction.AttackerAction.CardEffects.Add(effect); 
+                } else {
+                    actionData.CombatAction.DefenderAction.CardEffects.Add(effect);
+                }
+            }
         }
 
         cardUI.ClearSelectedCards();

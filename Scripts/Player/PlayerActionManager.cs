@@ -26,8 +26,8 @@ public class PlayerActionManager : MonoBehaviour
         playerDeckManager = GetComponent<PlayerDeckManager>();
         List<Card> currentHand = playerDeckManager.GetPlayerHand();
         cardUI.InitializeHand(currentHand);
-        actionData.hand = currentHand;
-        actionData.deckCards = playerDeckManager.GetPlayerDeckCards();
+        actionData.CardData.AttackerSelectedCards = currentHand;
+        actionData.CardData.DeckCards = playerDeckManager.GetPlayerDeckCards();
     }
 
     public void StartAction()
