@@ -70,6 +70,7 @@ public class SelectCardsUI : MonoBehaviour
             }
         }
 
+        actionData.CardData.AttackerSelectedCards = cardUI.GetSelectedCards();
         cardUI.ClearSelectedCards();
         gameObject.SetActive(false);
         cardUI.DisplayCardUI(false);

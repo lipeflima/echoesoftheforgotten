@@ -17,3 +17,9 @@ MonoBehaviour:
   manaCost: 1
   behaviorClassName: FireFuryBehavior
   artwork: {fileID: 0}
+  effects:
+  - statName: Health
+    value: 3
+    effectType: 0
+    duration: 0
+  cardType: 0

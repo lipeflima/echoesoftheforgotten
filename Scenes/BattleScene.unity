@@ -271,6 +271,7 @@ GameObject:
   - component: {fileID: 102371144}
   - component: {fileID: 102371149}
   - component: {fileID: 102371150}
+  - component: {fileID: 102371151}
   m_Layer: 0
   m_Name: Enemy (1)
   m_TagString: Enemy
@@ -393,6 +394,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce65d90740afe584bb3631b6e2eb1755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &102371151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102371142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 392e2c094371d7143aa3af54328faac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnManager: {fileID: 1360693484}
 --- !u!1 &137601349
 GameObject:
   m_ObjectHideFlags: 0
@@ -699,38 +713,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201064702}
   m_CullTransparentMesh: 1
---- !u!1 &270312823
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 270312824}
-  m_Layer: 0
-  m_Name: Data
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &270312824
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 270312823}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 467.98856, y: 268.7592, z: -91.20787}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1217842960}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &311727551
 GameObject:
   m_ObjectHideFlags: 0
@@ -2933,6 +2915,7 @@ GameObject:
   - component: {fileID: 965577042}
   - component: {fileID: 965577047}
   - component: {fileID: 965577048}
+  - component: {fileID: 965577049}
   m_Layer: 0
   m_Name: Enemy (2)
   m_TagString: Enemy
@@ -3055,6 +3038,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce65d90740afe584bb3631b6e2eb1755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &965577049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965577040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 392e2c094371d7143aa3af54328faac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnManager: {fileID: 1360693484}
 --- !u!1 &1020289173
 GameObject:
   m_ObjectHideFlags: 0
@@ -3431,54 +3427,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1185398924}
   m_CullTransparentMesh: 1
---- !u!1 &1217842959
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1217842960}
-  - component: {fileID: 1217842961}
-  m_Layer: 0
-  m_Name: ActionData
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1217842960
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1217842959}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 270312824}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1217842961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1217842959}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb500b7c9761b88419873911fbfee805, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectedCards: []
-  hand: []
-  deckCards: []
-  manaCost: 0
 --- !u!1 &1255393403
 GameObject:
   m_ObjectHideFlags: 0
@@ -6524,6 +6472,7 @@ GameObject:
   - component: {fileID: 8809434009696813913}
   - component: {fileID: 8809434009696813916}
   - component: {fileID: 8809434009696813917}
+  - component: {fileID: 8809434009696813918}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -6860,6 +6809,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce65d90740afe584bb3631b6e2eb1755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8809434009696813918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3384513971260087014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 392e2c094371d7143aa3af54328faac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnManager: {fileID: 1360693484}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -6871,4 +6833,3 @@ SceneRoots:
   - {fileID: 2006838824}
   - {fileID: 467536346}
   - {fileID: 162282216}
-  - {fileID: 270312824}

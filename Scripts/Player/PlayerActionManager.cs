@@ -1,4 +1,6 @@
+using System.Reflection;
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,29 +17,30 @@ public class PlayerActionManager : MonoBehaviour
     public SelectCardsUI selectCardsUI;
     public SelectTargetUI selectTargetUI;
     public SelectAttackUI selectAttackUI;
-   
-
     public CardUI cardUI;
 
-    private void Start()
+    public void Awake()
     {
-        actionData = new ActionData();
         turnManager = FindObjectOfType<TurnManager>();
-        playerDeckManager = GetComponent<PlayerDeckManager>();
-        List<Card> currentHand = playerDeckManager.GetPlayerHand();
-        cardUI.InitializeHand(currentHand);
-        actionData.CardData.AttackerSelectedCards = currentHand;
-        actionData.CardData.DeckCards = playerDeckManager.GetPlayerDeckCards();
+        playerDeckManager = gameObject.GetComponent<PlayerDeckManager>();
     }
 
-    public void StartAction()
+    public void Start()
     {
+        List<Card> currentHand = playerDeckManager.GetPlayerHand();
+        cardUI.InitializeHand(currentHand);
+    }
+
+    public void StartAction(ActionData data)
+    {
+        actionData = data;
         StartManageHand();
         generalUI.Initialize();
     }
 
     private void StartManageHand()
     {
+        actionData.CardData.DeckCards = playerDeckManager.GetPlayerDeckCards();
         currentState = ActionStates.ManageHand;
         generalUI.SetCurrentActionState("Manage Hand");
         cardUI.DisplayCardUI(true);

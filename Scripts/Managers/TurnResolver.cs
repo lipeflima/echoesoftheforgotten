@@ -22,7 +22,7 @@ public class TurnResolver : MonoBehaviour
         defenderData.Defender.ApplyDamage(damage);
 
         // 4. Aplica efeitos de contra-ataque, se houver
-        if (defenderData.CombatAction.DefenderAction.Defense == DefenseStrategy.CounterAttack && IsCounterAttackSuccessful(defenderData.Defender.Dexterity, attackerData.Attacker.Dexterity))
+        if (defenderData.CombatAction.DefenderAction.DefenseStrategy == DefenseStrategy.CounterAttack && IsCounterAttackSuccessful(defenderData.Defender.Dexterity, attackerData.Attacker.Dexterity))
         {
             attackerData.Defender.ApplyDamage(defenderData.CombatAction.CalculatedCounterDamage);
         }

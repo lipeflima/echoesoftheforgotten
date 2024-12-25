@@ -12,11 +12,13 @@ public class TurnManager : MonoBehaviour {
     public Battler currentDefender { get; set; }
     public Battler currentAttacker { get; set; }
     private TargetManager targetManager;
+    private ActionData actionData;
     private int turnCount = 0;
     private bool IsPlayerActionCompleted = false;
 
     void Start() 
     {
+        InitializeActionData();
         InitializeBattlers();
         StartTurnCycle();
     }
@@ -29,6 +31,7 @@ public class TurnManager : MonoBehaviour {
     private void InitializeBattlers()
     {
         GameObject playerObject = GameObject.FindWithTag("Player");
+
         if (playerObject != null)
         {
             CharacterStats playerStats = playerObject.GetComponent<CharacterStats>();
@@ -87,6 +90,10 @@ public class TurnManager : MonoBehaviour {
             targetManager.HighlightAttacker(currentAttacker.battlerGameobject);
             targetManager.HighlightDefender(currentDefender.battlerGameobject);
 
+            actionData.Attacker = currentAttacker;
+            actionData.Defender = currentDefender;
+            actionData.EnergyPool = energyPool;
+
             if (currentAttacker.IsPlayer)
             {
                 // Espera a interação do jogador
@@ -95,8 +102,7 @@ public class TurnManager : MonoBehaviour {
             else
             {
                 // Ação automática para NPCs
-                currentAttacker.TakeAction();
-                yield return new WaitForSeconds(2f);
+                currentAttacker.TakeAction(actionData);
             }
 
             if (currentDefender.IsPlayer)
@@ -105,8 +111,7 @@ public class TurnManager : MonoBehaviour {
             }
             else
             {
-                currentDefender.Defend(currentAttacker);
-                yield return new WaitForSeconds(2f);
+                yield return StartCoroutine(WaitForDefenderActionComplete());
             }
 
             // TurnResolver resolver = new TurnResolver();
@@ -122,14 +127,20 @@ public class TurnManager : MonoBehaviour {
         IsPlayerActionCompleted = false;
         if (action == "attack")
         {
-            currentAttacker.TakeAction();
+            currentAttacker.TakeAction(actionData);
             yield return new WaitUntil(() => IsPlayerActionCompleted);
         }
         else
         {
-            currentDefender.Defend(currentAttacker);
+            currentDefender.Defend(actionData);
             yield return new WaitUntil(() => IsPlayerActionCompleted);
         }
+    }
+
+    IEnumerator WaitForDefenderActionComplete()
+    {
+        yield return new WaitUntil(() => IsPlayerActionCompleted);
+        currentDefender.Defend(actionData);
     }
 
     private void NextTurn()
@@ -147,6 +158,12 @@ public class TurnManager : MonoBehaviour {
             List<GameObject> battlerObjects = battlers.Select(b => b.battlerGameobject).ToList();
             targetManager.InitializeTargets(battlers, battlerObjects);
         }
+    }
+
+    public void InitializeActionData()
+    {
+        actionData = new ActionData();
+        Debug.Log(">>>>>>>>>>>>>ActionData initialized.");
     }
 
     public void SetPlayerActionCompleted()
