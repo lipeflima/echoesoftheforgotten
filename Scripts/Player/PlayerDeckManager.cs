@@ -34,15 +34,19 @@ public class PlayerDeckManager : MonoBehaviour
         }
     }
 
-    public Card DrawCards(int amount)
+    public void DrawCards(int amount)
     {
-        Card newCard = playerDeck.DrawCard();
         for (int i = 0; i < amount; i++)
         {
-            hand.Add(newCard);
-        }
+            if (hand.Count < 4) hand.Add(playerDeck.DrawCard());
+        }       
+    }
 
-        return newCard;        
+    public Card DrawCard()
+    {
+        Card card = playerDeck.DrawCard();
+        if (hand.Count < 4) hand.Add(card);
+        return card;     
     }
 
     public void Discard(List<Card> cards)

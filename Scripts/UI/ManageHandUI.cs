@@ -63,10 +63,9 @@ public class ManageHandUI : MonoBehaviour
     private void OnResetHand()
     {
         Debug.Log("Reset Hand");
-        
         cardUI.ClearHand();
         playerDeckManager.Discard(playerDeckManager.GetPlayerHand());
-        playerDeckManager.DrawCards(playerDeckManager.GetMaxHandSize());
+        playerDeckManager.DrawCards(4);
         List<Card> newHand = playerDeckManager.GetPlayerHand();
         cardUI.InitializeHand(newHand);
         
@@ -85,7 +84,7 @@ public class ManageHandUI : MonoBehaviour
     private void OnPickCard()
     {
         Debug.Log("Pick Card");
-        Card newcard = playerDeckManager.DrawCards(1);
+        Card newcard = playerDeckManager.DrawCard();
         cardUI.AddCard(newcard);
         pickCardCount++;
     }
