@@ -25,16 +25,16 @@ public class EnemyDeckManager : MonoBehaviour
 
     public void DrawHand()
     {
-        for (int i = 0; i < maxHandSize; i++)
+        /* for (int i = 0; i < maxHandSize; i++)
         {
             Card newCard = enemyDeck.DrawCard();
             hand.Add(newCard);
-        }
+        } */
     }
 
-    public void PlayCard(Card selectedCard, CharacterStats user, CharacterStats target)
+    public void PlayCard(Card selectedCard, Battler target)
     {
-        enemyDeck.UseCard(selectedCard, user, target);
+        enemyDeck.UseCard(selectedCard, target);
     }
 }
 

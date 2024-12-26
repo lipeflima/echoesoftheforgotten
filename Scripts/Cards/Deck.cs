@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Deck
 {
-    private List<Card> cards = new List<Card>();
+    private List<Card> cards;
+    private List<Card> discardPile = new List<Card>();
 
     public Deck(List<Card> initialCards)
     {
@@ -12,39 +14,62 @@ public class Deck
         Shuffle();
     }
 
+    // Embaralhar o deck
     public void Shuffle()
     {
-        for (int i = 0; i < cards.Count; i++)
-        {
-            int randomIndex = Random.Range(0, cards.Count);
-            (cards[i], cards[randomIndex]) = (cards[randomIndex], cards[i]);
-        }
+        System.Random rng = new System.Random();
+        cards = cards.OrderBy(card => rng.Next()).ToList();
     }
 
-    public Card DrawCard()
+    // Comprar uma carta
+    public Card DrawOneCard()
     {
-        if (cards.Count == 0) return null;
-        Card topCard = cards[0];
+        if (cards.Count == 0) RecycleDiscardPile();
+        if (cards.Count == 0) return null; // Deck vazio
+
+        Card drawnCard = cards[0];
         cards.RemoveAt(0);
-        return topCard;
+        return drawnCard;
     }
 
-    public void AddCard(Card card)
+    // Comprar múltiplas cartas
+    public List<Card> DrawCards(int count)
     {
-        cards.Add(card);
+        List<Card> drawnCards = new List<Card>();
+        for (int i = 0; i < count; i++)
+        {
+            Card card = DrawOneCard();
+            if (card != null) drawnCards.Add(card);
+        }
+        return drawnCards;
     }
 
-    public void Remove(Card card)
+    // Descartar cartas
+    public void Discard(List<Card> cardsToDiscard)
     {
-        cards.Remove(card);
+        discardPile.AddRange(cardsToDiscard);
     }
 
-    public List<Card> GetDeckCards()
+    public void Discard(Card card)
     {
-        return cards;
+        discardPile.Add(card);
     }
 
-    public void UseCard(Card selectedCard, CharacterStats user, CharacterStats target)
+    // Reciclar a pilha de descarte
+    private void RecycleDiscardPile()
+    {
+        cards = new List<Card>(discardPile);
+        discardPile.Clear();
+        Shuffle();
+    }
+
+    // Retornar o tamanho do deck
+    public int Count => cards.Count;
+
+    // Verificar se o deck está vazio
+    public bool IsEmpty => cards.Count == 0;
+
+    public void UseCard(Card selectedCard, Battler target)
     {
         // Resolve o comportamento da carta
         CardBehavior behavior = CardResolver.Resolve(selectedCard);
@@ -52,7 +77,7 @@ public class Deck
         if (behavior != null)
         {
             // Executa a ação da carta
-            behavior.ExecuteAction(user, target);
+            behavior.ExecuteAction(target);
         }
         else
         {

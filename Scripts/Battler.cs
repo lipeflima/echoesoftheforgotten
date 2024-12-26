@@ -24,8 +24,8 @@ public abstract class Battler
 
     }
 
-    public abstract void TakeAction();
-    public abstract void Defend(Battler attacker);
+    public abstract void TakeAction(ActionData actionData);
+    public abstract void Defend(ActionData actionData);
     public abstract void ApplyDamage(int damage);
 }
 

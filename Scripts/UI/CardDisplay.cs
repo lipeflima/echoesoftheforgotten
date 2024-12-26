@@ -18,7 +18,7 @@ public class CardDisplay : MonoBehaviour
         card = newCard;
         cardNameText.text = card.cardName;
         cardDescriptionText.text = card.description;
-        cardCostText.text = card.manaCost.ToString();
+        cardCostText.text = card.EnergyCost.ToString();
         cardArtworkImage.sprite = card.artwork;
         highlight.gameObject.SetActive(false);
     }

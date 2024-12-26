@@ -8,7 +8,7 @@ public class PlayerCombat : Battler
     public PlayerCombat(string name, int initiative, int health, int mana)
         : base(name, initiative, true, health, mana) { }
 
-    public override void TakeAction()
+    public override void TakeAction(ActionData actionData)
     {
         Debug.Log("Player está iniciando as ações!");
 
@@ -20,12 +20,23 @@ public class PlayerCombat : Battler
             return;
         }
 
-        actionManager.StartAction();
+        actionManager.StartAction(actionData);
     }
 
-    public override void Defend(Battler attacker)
+    public override void Defend(ActionData actionData)
     {
-        Debug.Log($"{Name} está se defendendo contra {attacker.Name}.");
+        Debug.Log($"{Name} está se defendendo contra {actionData.Attacker.Name}.");
+
+        actionManager = battlerGameobject.GetComponent<PlayerActionManager>();
+        
+        if (actionManager == null)
+        {
+            Debug.LogError("PlayerActionManager não encontrado!");
+            return;
+        }
+
+        actionManager.StartAction(actionData);
+
     }
 
     public override void ApplyDamage(int damage)

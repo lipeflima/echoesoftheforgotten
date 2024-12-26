@@ -1,9 +1,43 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using static ActionManager;
 
 public class EnemyDefenseAction : MonoBehaviour
 {
+    public void Update()
+    {
+        
+    }
+    public void Start()
+    {
+        /* var playerDeckManager = FindObjectOfType<PlayerDeckManager>();
+        var attackerBattler = new Player("Aron", 3, 5, 5);
+        var defenderBattler = new Enemy("Bolha", 1, 2, 2);
+        var actionData = new ActionData
+            {
+                Attacker = attackerBattler,
+                Defender = defenderBattler,
+                CombatAction = new CombatAction
+                {
+                    AttackerAction = new(),
+                    DefenderAction = new(),
+                },
+                CardData = new CardData(),
+            };
+
+        actionData.CardData.AttackerSelectedCards.Add(playerDeckManager.DrawCards(2));
+        actionData.CombatAction.AttackerAction.Dexterity = 2;
+        actionData.CombatAction.DefenderAction.Dexterity = 1;
+        actionData.CombatAction.AttackerAction.Attack = 3;
+        actionData.CombatAction.DefenderAction.Defense = 1;
+        actionData.CombatAction.AttackerAction.ManaCost = 4;
+        
+        ExecuteDefense(
+            actionData
+        ); */
+    }
+
     [SerializeField] private TurnManager turnManager;
     public void ExecuteDefense(ActionData data)
     {
@@ -13,17 +47,46 @@ public class EnemyDefenseAction : MonoBehaviour
         List<IStrategy> strategies = new List<IStrategy>
         {
             new BlockStrongAttacks(),
+            new RegenerateHealth(),
             new CounterLowCostAttacks(),
             new PreserveEnergy(),
-            new RandomDefense()
+            new BestBuff()
         };
 
-        // Iterar pelas estratégias e executar a primeira válida
-        foreach (var strategy in strategies)
+        int iterator = 0;
+        bool strategyApplied = false;
+
+        // Tentar encontrar no máximo duas cartas
+        while (iterator < 2)
         {
-            if (strategy.Execute(context))
-                break; // Uma estratégia válida foi aplicada
+
+            foreach (var strategy in strategies)
+            {
+                Card bestCard = strategy.Execute(context);
+                if (bestCard != null)
+                {
+                    SelectCard(bestCard, context);
+                    strategyApplied = true; 
+                    break;
+                }
+            }
+
+            if (context.selectedCards.Count >= 2 || !strategyApplied)
+                break;
+
+            iterator++;
         }
+
+        context.HasStrategyApplied = strategyApplied;
+        data.CombatAction.DefenderAction.DefenseStrategy = DetermineDefenseStrategy(context);
+        Debug.Log($"Defense strategy: {data.CombatAction.DefenderAction.DefenseStrategy}");
+    }
+
+    private void SelectCard(Card card, EnemyContext context)
+    {
+        Debug.Log($"Inimigo selecionou uma carta: {card.cardName}");
+        context.cardsInHand.Remove(card);
+        context.selectedCards.Add(card);
     }
 
     // Constrói e retorna o contexto com base nos dados fornecidos
@@ -31,108 +94,42 @@ public class EnemyDefenseAction : MonoBehaviour
     {
         return new EnemyContext
         {
-            attackerStats = data.attacker,
-            defenderStats = data.defender,
-            cardsInHand = data.hand,
+            attackerStats = data.Attacker,
+            defenderStats = data.Defender,
+            cardsInHand = data.CardData.AttackerSelectedCards,
             availableEnergy = GetAvailableEnergy(), // Exemplo
-            lastAction = data
+            attackerData = data.CombatAction.AttackerAction,
+            selectedCards = new(),
+            attackerDexterity = data.CombatAction.AttackerAction.Dexterity,
+            defenderDexterity = data.CombatAction.DefenderAction.Dexterity,
         };
     }
+
+    private DefenseStrategy DetermineDefenseStrategy(EnemyContext context)
+    {
+        if (!context.HasStrategyApplied) return DefenseStrategy.Evade;
+        if (HasDefenseCard(context)) return DefenseStrategy.CardDefense;
+        if (HasHealthCard(context)) return DefenseStrategy.Basic;
+        if (HasDexterityCard(context)) return DefenseStrategy.CounterAttack;
+        if (HasBuffOrDebuffCard(context)) return DefenseStrategy.Basic;
+        return DefenseStrategy.Evade;
+    }
+
+    private bool HasDefenseCard(EnemyContext context) =>
+        context.selectedCards.Any(card => card.effects.Any(effect => effect.effectType == Card.CardType.Defense));
+
+    private bool HasHealthCard(EnemyContext context) =>
+        context.selectedCards.Any(card => card.effects.Any(effect => effect.statName == "Health"));
+
+    private bool HasDexterityCard(EnemyContext context) =>
+        context.selectedCards.Any(card => card.effects.Any(effect => effect.statName == "Dexterity"));
+
+    private bool HasBuffOrDebuffCard(EnemyContext context) =>
+        context.selectedCards.Any(card => card.effects.Any(effect =>
+            effect.effectType == Card.CardType.Buff || effect.effectType == Card.CardType.Debuff));
 
     private int GetAvailableEnergy()
     {
         return turnManager.GetAvailableEnergy();
-    }
-}
-
-public class EnemyContext
-{
-    public Battler attackerStats; // Estatísticas do atacante
-    public Battler defenderStats; // Estatísticas do defensor
-    public List<Card> cardsInHand; // Cartas disponíveis para defesa
-    public int availableEnergy; // Energia disponível para usar cartas
-    public ActionData lastAction; // Última ação do atacante
-}
-
-public interface IStrategy
-{
-    bool Execute(EnemyContext context);
-}
-
-public class BlockStrongAttacks : IStrategy
-{
-    public bool Execute(EnemyContext context)
-    {
-        // Avaliar se o ataque é forte
-        if (context.lastAction.defender.Attack > 10 && context.availableEnergy >= 5)
-        {
-            // Use uma carta de bloqueio forte
-            Card bestBlockCard = context.cardsInHand.Find(card => card.cardName == "Strong Block");
-            if (bestBlockCard != null)
-            {
-                PlayCard(bestBlockCard);
-                return true; // Estratégia aplicada
-            }
-        }
-        return false; // Estratégia não aplicável
-    }
-
-    private void PlayCard(Card card)
-    {
-        Debug.Log($"Inimigo jogou a carta: {card.cardName}");
-    }
-}
-
-public class CounterLowCostAttacks : IStrategy
-{
-    public bool Execute(EnemyContext context)
-    {
-        if (context.lastAction.manaCost <= 2 && context.availableEnergy >= 3)
-        {
-            Card counterCard = context.cardsInHand.Find(card => card.cardName == "Quick Counter");
-            if (counterCard != null)
-            {
-                PlayCard(counterCard);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void PlayCard(Card card)
-    {
-        Debug.Log($"Inimigo usou contra-ataque: {card.cardName}");
-    }
-}
-
-public class PreserveEnergy : IStrategy
-{
-    public bool Execute(EnemyContext context)
-    {
-        if (context.availableEnergy <= 3)
-        {
-            Debug.Log("Inimigo decidiu preservar energia.");
-            return true; // Simula um turno defensivo
-        }
-        return false;
-    }
-}
-
-public class RandomDefense : IStrategy
-{
-    public bool Execute(EnemyContext context)
-    {
-        if (context.cardsInHand.Count > 0)
-        {
-            Card randomCard = context.cardsInHand[Random.Range(0, context.cardsInHand.Count)];
-            PlayCard(randomCard);
-            return true;
-        }
-        return false;
-    }
-
-    private void PlayCard(Card card)
-    {
-        Debug.Log($"Inimigo jogou uma carta aleatória: {card.cardName}");
     }
 }

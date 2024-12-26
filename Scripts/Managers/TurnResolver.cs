@@ -16,35 +16,48 @@ public class TurnResolver : MonoBehaviour
         int damage = ProcessAttack(attackerData, defenderData);
 
         // 2. Aplica buffs e debuffs
-        ApplyBuffsAndDebuffs(attackerData, defenderData);
+        ApplyBuffsAndDebuffs(attackerData.CombatAction.AttackerAction.CardEffects, attackerData.CombatAction.AttackerAction.Target);
 
         // 3. Aplica o resultado ao defensor
-        defenderData.defender.ApplyDamage(damage);
+        defenderData.Defender.ApplyDamage(damage);
 
         // 4. Aplica efeitos de contra-ataque, se houver
-        if (defenderData.defense == DefenseStrategy.CounterAttack && IsCounterAttackSuccessful(defenderData.defender.Dexterity, attackerData.attacker.Dexterity))
+        if (defenderData.CombatAction.DefenderAction.DefenseStrategy == DefenseStrategy.CounterAttack && IsCounterAttackSuccessful(defenderData.Defender.Dexterity, attackerData.Attacker.Dexterity))
         {
-            attackerData.defender.ApplyDamage(defenderData.calculatedCounterDamage);
+            attackerData.Defender.ApplyDamage(defenderData.CombatAction.CalculatedCounterDamage);
         }
     }
 
     private int ProcessAttack(ActionData attackerData, ActionData defenderData)
     {
-        switch (attackerData.attack)
+        switch (attackerData.CombatAction.AttackerAction.AttackStrategy)
         {
             case AttackStrategy.Basic:
-                return Math.Max(0, attackerData.calculatedAttack - defenderData.calculatedDefense);
+                return Math.Max(0, attackerData.CombatAction.CalculatedAttack - defenderData.CombatAction.CalculatedDefense);
             case AttackStrategy.CardAttack:
-                return CalculateSpecialAttackDamage(attackerData);
+                return CalculateSpecialAttackDamage(attackerData.CombatAction.AttackerAction.CardEffects.FindAll(effect => effect.statName == "Health"));
             case AttackStrategy.Fake:
                 return 0; // Fake attack does no damage
+            default:
+                break;
         }
         return 0;
     }
 
-    private void ApplyBuffsAndDebuffs(ActionData attackerData, ActionData defenderData)
+    private void ApplyBuffsAndDebuffs(List<CardEffectData> effects, Battler target)
     {
-        // Processa lógica de buffs/debuffs
+        foreach(var effect in effects)
+        {
+            switch (effect.effectType)
+            {
+                case Card.CardType.Buff:
+                    // ApplyBuff(effect, target);
+                    break;
+                case Card.CardType.Debuff:
+                    // ApplyDebuff(effect, target);
+                    break;
+            }
+        }
     }
 
     public static bool IsCounterAttackSuccessful(int defenderDexterity, int attackerDexterity)
@@ -63,9 +76,13 @@ public class TurnResolver : MonoBehaviour
         return defenderResult >= adjustedThreshold;
     }
 
-    private int CalculateSpecialAttackDamage(ActionData attackerData)
+    private int CalculateSpecialAttackDamage(List<CardEffectData> effects)
     {
-        // Cálculo personalizado para ataques especiais
-        return attackerData.cardDamage;
+        var damageSome = 0;
+        foreach(var effect in effects)
+        {
+            damageSome+=effect.value;
+        }
+        return damageSome;
     }
 }

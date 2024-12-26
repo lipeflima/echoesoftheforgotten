@@ -17,3 +17,9 @@ MonoBehaviour:
   manaCost: 2
   behaviorClassName: SubmersedChamberBehavior
   artwork: {fileID: 0}
+  effects:
+  - statName: Movement
+    value: 1
+    effectType: 3
+    duration: 1
+  cardType: 3
