@@ -29,7 +29,7 @@ public class SelectCardsUI : MonoBehaviour
         actionData = data;
         onComplete = onCompleteCallback;
 
-        availableEnergy = GetCurrentEnergy();
+        availableEnergy = actionData.PlayerStats.Mana;
         UpdateEnergyText();
 
         gameObject.SetActive(true);
@@ -61,27 +61,34 @@ public class SelectCardsUI : MonoBehaviour
 
             foreach(var effect in selectedCard.effects)
             {
-                if (effect.effectType == Card.CardType.Attack || effect.effectType == Card.CardType.Debuff)
+                if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
                 {
                     actionData.CombatAction.AttackerAction.CardEffects.Add(effect); 
                 } else {
                     actionData.CombatAction.DefenderAction.CardEffects.Add(effect);
                 }
             }
+
+            if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
+            {
+                actionData.CombatAction.AttackerAction.EnergyCost += selectedCard.EnergyCost;
+            } else {
+                actionData.CombatAction.DefenderAction.EnergyCost += selectedCard.EnergyCost;
+            }
         }
 
-        actionData.CardData.AttackerSelectedCards = cardUI.GetSelectedCards();
+        if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
+        {
+            actionData.CardData.AttackerSelectedCards = cardUI.GetSelectedCards();
+        } else {
+            actionData.CardData.DefenderSelectedCards = cardUI.GetSelectedCards();
+        }
+
         cardUI.ClearSelectedCards();
         gameObject.SetActive(false);
         cardUI.DisplayCardUI(false);
         isSelectCardsActive = false;
         onComplete?.Invoke();
-    }
-
-    private int GetCurrentEnergy()
-    {
-        // Simule a energia atual do jogador (adapte para o sistema de energia)
-        return 10;
     }
 
     private void UpdateEnergyText()

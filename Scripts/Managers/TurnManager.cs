@@ -47,6 +47,7 @@ public class TurnManager : MonoBehaviour {
                 var playerComponent = playerObject.AddComponent<BattlerComponent>();
                 playerComponent.battler = player;
                 battlers.Add(player);
+                actionData.PlayerStats = playerStats;
             }
         }
         
@@ -66,6 +67,7 @@ public class TurnManager : MonoBehaviour {
                 var enemyComponent = enemyObject.AddComponent<BattlerComponent>();
                 enemyComponent.battler = enemy;
                 battlers.Add(enemy);
+                actionData.EnemyStats = enemyStats;
             }
         }
 
@@ -92,7 +94,6 @@ public class TurnManager : MonoBehaviour {
 
             actionData.Attacker = currentAttacker;
             actionData.Defender = currentDefender;
-            actionData.EnergyPool = energyPool;
 
             if (currentAttacker.IsPlayer)
             {
@@ -165,7 +166,6 @@ public class TurnManager : MonoBehaviour {
     public void InitializeActionData()
     {
         actionData = new ActionData();
-        Debug.Log(">>>>>>>>>>>>>ActionData initialized.");
     }
 
     public void SetPlayerActionCompleted()

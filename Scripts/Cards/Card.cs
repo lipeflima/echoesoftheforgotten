@@ -9,7 +9,7 @@ public class Card : ScriptableObject
     public enum CardType { Attack, Defense, Buff, Debuff }
     public string cardName;
     public string description;
-    public int manaCost;
+    public int EnergyCost;
     public string behaviorClassName; // Nome da classe que implementa o comportamento
     public Sprite artwork;
     public List<CardEffectData> effects;

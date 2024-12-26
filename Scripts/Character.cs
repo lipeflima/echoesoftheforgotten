@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
-    public string Name { get; protected set; }
-    public int Initiative { get; protected set; }
-    public bool IsPlayer { get; protected set; }
-    public int Health { get; protected set; }
-    public int Mana { get; protected set; }
-    public int Attack { get; protected set; }
-    public int Defense { get; protected set; }
-    public int Dexterity { get; protected set; }
-    public int Resistance { get; protected set; }
-    public int Mentality { get; protected set; }
-    public int Luck { get; protected set; }
-    public float CriticalDamage { get; protected set; }
-    public float CriticalChance { get; protected set; }
-    public float ArmourPenetration { get; protected set; }
-    public float Accuracy { get; protected set; }
-    public float Recovery { get; protected set; }
-    public float Absorsion { get; protected set; }
+    public string Name;
+    public int Initiative;
+    public bool IsPlayer;
+    public int Health;
+    public int Mana;
+    public int Attack;
+    public int Defense;
+    public int Dexterity;
+    public int Resistance;
+    public int Mentality;
+    public int Luck;
+    public float CriticalDamage;
+    public float CriticalChance;
+    public float ArmourPenetration;
+    public float Accuracy;
+    public float Recovery;
+    public float Absorsion;
 
 }

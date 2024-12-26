@@ -42,7 +42,7 @@ public class SelectAttackUI : MonoBehaviour
     private void OnBasicAttack()
     {
         Debug.Log($"Player irá usar um ataque basico");
-        // actionData.attack = ActionData.AttackType.Basic;
+        actionData.CombatAction.AttackerAction.AttackStrategy = ActionManager.AttackStrategy.Basic;
         nextButton.interactable = true;
         basicAttackButton.interactable = false; 
         fakeAttackButton.interactable = true;
@@ -52,7 +52,7 @@ public class SelectAttackUI : MonoBehaviour
     private void OnFakeAttack()
     {
         Debug.Log($"Player irá fingir um ataque");
-        // actionData.attack =ActionData.AttackType.Fake;
+        actionData.CombatAction.AttackerAction.AttackStrategy = ActionManager.AttackStrategy.Fake;
         nextButton.interactable = true;
         basicAttackButton.interactable = true; 
         fakeAttackButton.interactable = false;
@@ -63,7 +63,7 @@ public class SelectAttackUI : MonoBehaviour
     private void OnCardAttack()
     {
         Debug.Log($"Player irá usar um ataque especial de carta");
-        // actionData.attack = ActionData.AttackType.CardAttack;
+        actionData.CombatAction.AttackerAction.AttackStrategy = ActionManager.AttackStrategy.CardAttack;
         nextButton.interactable = true;
         basicAttackButton.interactable = true; 
         fakeAttackButton.interactable = true;

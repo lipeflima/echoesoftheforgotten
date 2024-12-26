@@ -16,7 +16,7 @@ public class PreserveEnergy : IStrategy
             {
                 // Buscar cartas que aumentam energia
                 return context.cardsInHand
-                    .Where(card => card.manaCost <= context.availableEnergy)
+                    .Where(card => card.EnergyCost <= context.availableEnergy)
                     .Where(card => card.effects.Any(effect =>
                         effect.effectType == Card.CardType.Buff && effect.statName == "Energy"))
                     .OrderByDescending(card => card.effects
@@ -28,7 +28,7 @@ public class PreserveEnergy : IStrategy
             {
                 // Buscar cartas com menor custo-benefício entre energia e melhorar defesa ou diminuir ataque do inimigo
                 return context.cardsInHand
-                    .Where(card => card.manaCost <= context.availableEnergy) 
+                    .Where(card => card.EnergyCost <= context.availableEnergy) 
                     .Where(card => card.effects.Any(effect =>
                         (effect.effectType == Card.CardType.Defense && effect.statName == "Defense") ||
                         (effect.effectType == Card.CardType.Buff && effect.statName == "Defense") ||
@@ -36,7 +36,7 @@ public class PreserveEnergy : IStrategy
                     .OrderBy(card =>
                     {
                         // Calcula o custo-benefício
-                        int energyCost = card.manaCost;
+                        int energyCost = card.EnergyCost;
                         int defenseGain = card.effects
                             .Where(effect => (effect.effectType == Card.CardType.Defense || effect.effectType == Card.CardType.Buff) &&
                                             effect.statName == "Defense")

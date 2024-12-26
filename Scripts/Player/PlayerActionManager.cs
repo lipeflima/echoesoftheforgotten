@@ -17,6 +17,7 @@ public class PlayerActionManager : MonoBehaviour
     public SelectCardsUI selectCardsUI;
     public SelectTargetUI selectTargetUI;
     public SelectAttackUI selectAttackUI;
+    public SelectDefenseUI selectDefenseUI;
     public CardUI cardUI;
 
     public void Awake()
@@ -27,20 +28,23 @@ public class PlayerActionManager : MonoBehaviour
 
     public void Start()
     {
-        List<Card> currentHand = playerDeckManager.GetPlayerHand();
+        List<Card> currentHand = actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack 
+            ? playerDeckManager.GetAttackHand() 
+            : playerDeckManager.GetDefenseHand();
+
         cardUI.InitializeHand(currentHand);
+        cardUI.InitializeData(actionData);
     }
 
     public void StartAction(ActionData data)
     {
         actionData = data;
         StartManageHand();
-        generalUI.Initialize();
+        generalUI.Initialize(actionData);
     }
 
     private void StartManageHand()
     {
-        actionData.CardData.DeckCards = playerDeckManager.GetPlayerDeckCards();
         currentState = ActionStates.ManageHand;
         generalUI.SetCurrentActionState("Manage Hand");
         cardUI.DisplayCardUI(true);
@@ -48,14 +52,16 @@ public class PlayerActionManager : MonoBehaviour
             if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
             {
                 GoToNextAttackState(ActionStates.SelectAttackCards);
+            } else {
+                GoToNextDefenseState(ActionStates.SelectDefenseCards);
             }
-            GoToNextDefenseState(ActionStates.SelectDefenseCards);
         });
     }
 
     //---------------- ATACK STATES----------------//
     private void StartSelectAttackCards()
     {
+        Debug.Log("StartSelectAttackCards");
         currentState = ActionStates.SelectAttackCards;
         generalUI.SetCurrentActionState("Select Attack Cards");
         selectCardsUI.Initialize(actionData, () => GoToNextAttackState(ActionStates.SelectTarget));
@@ -63,6 +69,7 @@ public class PlayerActionManager : MonoBehaviour
 
     private void StartSelectTarget()
     {
+        Debug.Log("StartSelectTarget");
         currentState = ActionStates.SelectTarget;
         generalUI.SetCurrentActionState("Select Target");
         selectTargetUI.Initialize(() => GoToNextAttackState(ActionStates.SelectAttack));
@@ -70,6 +77,7 @@ public class PlayerActionManager : MonoBehaviour
 
     private void StartSelectAttack()
     {
+        Debug.Log("StartSelectAttack");
         currentState = ActionStates.SelectAttack;
         generalUI.SetCurrentActionState("Select Attack");
         selectAttackUI.Initialize(actionData, () => GoToNextAttackState(ActionStates.Confirm));
@@ -79,6 +87,7 @@ public class PlayerActionManager : MonoBehaviour
 
     private void StartSelectDefenseCards()
     {
+        Debug.Log("StartSelectDefenseCards");
         currentState = ActionStates.SelectDefenseCards;
         generalUI.SetCurrentActionState("Select Defense Cards");
         selectCardsUI.Initialize(actionData, () => GoToNextDefenseState(ActionStates.SelectDefense));
@@ -86,13 +95,15 @@ public class PlayerActionManager : MonoBehaviour
 
     private void StartSelectDefense()
     {
+        Debug.Log("StartSelectDefense");
         currentState = ActionStates.SelectDefense;
-        generalUI.SetCurrentActionState("Select Attack");
-        selectAttackUI.Initialize(actionData, () => GoToNextDefenseState(ActionStates.Confirm));
+        generalUI.SetCurrentActionState("Select Defense");
+        selectDefenseUI.Initialize(actionData, () => GoToNextDefenseState(ActionStates.Confirm));
     }
 
     private void StartConfirmAction()
     {
+        Debug.Log("StartConfirmAction");
         currentState = ActionStates.Confirm;
         generalUI.SetCurrentActionState("Confirm Actions");
         confirmActionUI.Initialize(ConfirmAction, CancelAction);

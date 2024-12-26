@@ -11,7 +11,7 @@ public class BestBuff : IStrategy
         if (context.cardsInHand.Count > 0)
         {
             return context.cardsInHand
-                .Where(card => card.manaCost <= context.availableEnergy)
+                .Where(card => card.EnergyCost <= context.availableEnergy)
                 .Select(card => new 
                 {
                     Card = card,

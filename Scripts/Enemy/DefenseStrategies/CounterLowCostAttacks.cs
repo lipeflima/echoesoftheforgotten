@@ -11,10 +11,10 @@ public class CounterLowCostAttacks : IStrategy
     public Card Execute(EnemyContext context)
     {
         Debug.Log($"Analisando CounterLowCost Strategy");
-        if (context.attackerData.ManaCost <= attackerLowManaCostBase && context.availableEnergy >= moderateAvailableEnergyBase)
+        if (context.attackerData.EnergyCost <= attackerLowManaCostBase && context.availableEnergy >= moderateAvailableEnergyBase)
         {
             return context.cardsInHand
-                .Where(card => card.manaCost <= context.availableEnergy)
+                .Where(card => card.EnergyCost <= context.availableEnergy)
                 .Where(card => card.effects.Any(effect =>
                     (effect.effectType == Card.CardType.Defense && effect.statName == "Dexterity") ||
                     (effect.effectType == Card.CardType.Buff && effect.statName == "Dexterity") ||

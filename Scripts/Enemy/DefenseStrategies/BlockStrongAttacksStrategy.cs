@@ -15,7 +15,7 @@ public class BlockStrongAttacks : IStrategy
         {
             // Use uma carta de bloqueio forte
             return context.cardsInHand
-            .Where(card => card.manaCost <= context.availableEnergy)
+            .Where(card => card.EnergyCost <= context.availableEnergy)
             .Where(card => card.effects.Any(effect =>
                 effect.effectType == Card.CardType.Defense ||
                 effect.effectType == Card.CardType.Buff ||

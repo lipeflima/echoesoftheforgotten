@@ -7,7 +7,8 @@ public class ActionData
 {
     public Battler Defender { get; set; }
     public Battler Attacker { get; set; }
-    public int EnergyPool { get; set; }
+    public CharacterStats PlayerStats { get; set; }
+    public CharacterStats EnemyStats { get; set; }
     public CurrentTurnAction CurrentTurnAction { get; set; }
     public CombatAction CombatAction { get; set; }
     // public Dictionary<string, object> CustomData = new Dictionary<string, object>();
@@ -24,7 +25,6 @@ public class CardData
 {
     public List<Card> AttackerSelectedCards { get; set; } = new List<Card>(); 
     public List<Card> DefenderSelectedCards { get; set; } = new List<Card>();
-    public List<Card> DeckCards { get; set; } = new List<Card>();
 }
 
 public class CombatAction
@@ -45,21 +45,21 @@ public class CombatAction
 
 public class AttackerAction
 {
-    public AttackStrategy AttackStrategy { get; set; } = new AttackStrategy();
+    public AttackStrategy AttackStrategy { get; set; }
     public Battler Target { get; set; }
     public List<CardEffectData> CardEffects { get; set; } = new List<CardEffectData>();
     public int Attack { get; set; }
     public int Evasion { get; set; }
     public int Dexterity { get; set; }
-    public int ManaCost { get; set; }
+    public int EnergyCost { get; set; }
 }
 
 public class DefenderAction
 {
-    public DefenseStrategy DefenseStrategy { get; set; } = new DefenseStrategy();
+    public DefenseStrategy DefenseStrategy { get; set; }
     public List<CardEffectData> CardEffects { get; set; } = new List<CardEffectData>();
     public int Defense { get; set; }
     public int Dexterity { get; set; }
-    public int ManaCost { get; set; }
+    public int EnergyCost { get; set; }
 }
 

@@ -26,6 +26,17 @@ public class Player : Battler
     public override void Defend(ActionData actionData)
     {
         Debug.Log($"{Name} está se defendendo contra {actionData.Attacker.Name}.");
+
+        actionManager = battlerGameobject.GetComponent<PlayerActionManager>();
+        
+        if (actionManager == null)
+        {
+            Debug.LogError("PlayerActionManager não encontrado!");
+            return;
+        }
+
+        actionManager.StartAction(actionData);
+
     }
 
     public override void ApplyDamage(int damage)

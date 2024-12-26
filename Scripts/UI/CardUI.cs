@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class CardUI : MonoBehaviour
 {
     public static CardUI instance;
+    private ActionData actionData;
     public Card Card { get; private set; }
     public event Action<CardUI> OnCardClicked;
     [SerializeField] private GameObject cardUIPrefab;
@@ -18,6 +19,11 @@ public class CardUI : MonoBehaviour
     public void Awake()
     {
         instance = this;
+    }
+
+    public void InitializeData(ActionData data)
+    {
+        actionData = data;
     }
 
     public void InitializeHand(List<Card> hand)
@@ -76,7 +82,7 @@ public class CardUI : MonoBehaviour
             selectedCards.Remove(card);
             HighlightCard(card, false);
         }
-        else if (selectedCards.Count < maxSelectableCards)
+        else if (selectedCards.Count < maxSelectableCards && card.EnergyCost <= actionData.PlayerStats.Mana)
         {
             selectedCards.Add(card);
             HighlightCard(card, true);
