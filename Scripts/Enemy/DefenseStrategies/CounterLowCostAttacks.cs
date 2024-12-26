@@ -37,6 +37,9 @@ public class CounterLowCostAttacks : IStrategy
 
                     int roll = random.Next(1, 21);
 
+                    // 1 nem calcula ja levou
+                    // 21 dano critico
+
                     // Ajusta a probabilidade para favorecer o contra-ataque
                     int adjustedThreshold = 10 + (context.attackerDexterity - (context.defenderDexterity + totalEffect));
                     int defenderRoll = roll + context.defenderDexterity + totalEffect;

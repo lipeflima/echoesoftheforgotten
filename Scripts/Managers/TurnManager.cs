@@ -127,11 +127,13 @@ public class TurnManager : MonoBehaviour {
         IsPlayerActionCompleted = false;
         if (action == "attack")
         {
+            actionData.CurrentTurnAction = ActionManager.CurrentTurnAction.Attack;
             currentAttacker.TakeAction(actionData);
             yield return new WaitUntil(() => IsPlayerActionCompleted);
         }
         else
         {
+            actionData.CurrentTurnAction = ActionManager.CurrentTurnAction.Defense;
             currentDefender.Defend(actionData);
             yield return new WaitUntil(() => IsPlayerActionCompleted);
         }

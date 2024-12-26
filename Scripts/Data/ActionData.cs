@@ -8,6 +8,7 @@ public class ActionData
     public Battler Defender { get; set; }
     public Battler Attacker { get; set; }
     public int EnergyPool { get; set; }
+    public CurrentTurnAction CurrentTurnAction { get; set; }
     public CombatAction CombatAction { get; set; }
     // public Dictionary<string, object> CustomData = new Dictionary<string, object>();
     public CardData CardData { get; set; }

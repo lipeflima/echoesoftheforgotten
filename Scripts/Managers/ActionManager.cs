@@ -8,6 +8,7 @@ public abstract class ActionManager : MonoBehaviour
     private ActionData actionData;
     
     public enum AttackStrategy { Basic, Fake, CardAttack }
+    public enum CurrentTurnAction { Attack, Defense };
     
     public enum DefenseStrategy { Evade, CounterAttack, CardDefense, Basic }
 
