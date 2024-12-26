@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : Battler
+public class PlayerCombat : Battler
 {
     public PlayerActionManager actionManager;
-    public Player(string name, int initiative, int health, int mana)
+    public PlayerCombat(string name, int initiative, int health, int mana)
         : base(name, initiative, true, health, mana) { }
 
     public override void TakeAction()

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.EditorTools;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class TurnManager : MonoBehaviour {
     public List<Battler> battlers = new List<Battler>();
@@ -34,7 +33,7 @@ public class TurnManager : MonoBehaviour {
             CharacterStats playerStats = playerObject.GetComponent<CharacterStats>();
             if (playerStats != null)
             {
-                Player player = new(
+                PlayerCombat player = new(
                     playerStats.Name,
                     playerStats.Initiative,
                     playerStats.Health,
