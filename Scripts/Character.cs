@@ -21,5 +21,7 @@ public class CharacterStats : MonoBehaviour
     public float Accuracy;
     public float Recovery;
     public float Absorsion;
+    public bool HasActiveBuff;
+    public bool HasActiveDebuff;
 
 }

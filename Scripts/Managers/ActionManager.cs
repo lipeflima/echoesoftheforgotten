@@ -7,10 +7,23 @@ public abstract class ActionManager : MonoBehaviour
     protected Coroutine actionCoroutine;
     private ActionData actionData;
     
-    public enum AttackStrategy { Basic, Fake, CardAttack }
+    public enum AttackStrategy { 
+        ArmourBreak, 
+        CriticalStrike, 
+        DisruptAccuracy, 
+        ExploitWeakDefense, 
+        FocusedAttack, 
+        OportunityStrike, 
+        StatBalancer,
+        FakeAttack,
+        HealthRecovery,
+        ManaRecovery,
+    }
+    public enum AttackType { Basic, FakeAttack, CardAttack }
     public enum CurrentTurnAction { Attack, Defense };
     
-    public enum DefenseStrategy { Evade, CounterAttack, CardDefense, Basic }
+    public enum DefenseType { Evade, CounterAttack, CardDefense, Basic }
+    public enum DefenseStrategy { BestBuff, BlockStrongAttack, CounterLowCostAttacks, PreserveEnergy, RegenerateHealth }
 
     public void StartAction(Battler battler)
     {

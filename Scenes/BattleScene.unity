@@ -393,6 +393,7 @@ GameObject:
   - component: {fileID: 102371149}
   - component: {fileID: 102371150}
   - component: {fileID: 102371151}
+  - component: {fileID: 102371152}
   m_Layer: 0
   m_Name: Enemy (1)
   m_TagString: Enemy
@@ -532,6 +533,8 @@ MonoBehaviour:
   Accuracy: 2
   Recovery: 1
   Absorsion: 1
+  HasActiveBuff: 0
+  HasActiveDebuff: 0
 --- !u!114 &102371151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -542,6 +545,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 392e2c094371d7143aa3af54328faac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnManager: {fileID: 1360693484}
+--- !u!114 &102371152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102371142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5695dd7872414443ac5befb3a66dbdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   turnManager: {fileID: 1360693484}
@@ -3882,6 +3898,7 @@ GameObject:
   - component: {fileID: 965577047}
   - component: {fileID: 965577048}
   - component: {fileID: 965577049}
+  - component: {fileID: 965577050}
   m_Layer: 0
   m_Name: Enemy (2)
   m_TagString: Enemy
@@ -4021,6 +4038,8 @@ MonoBehaviour:
   Accuracy: 2
   Recovery: 1
   Absorsion: 1
+  HasActiveBuff: 0
+  HasActiveDebuff: 0
 --- !u!114 &965577049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4031,6 +4050,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 392e2c094371d7143aa3af54328faac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnManager: {fileID: 1360693484}
+--- !u!114 &965577050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965577040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5695dd7872414443ac5befb3a66dbdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   turnManager: {fileID: 1360693484}
@@ -8151,6 +8183,7 @@ GameObject:
   - component: {fileID: 8809434009696813916}
   - component: {fileID: 8809434009696813917}
   - component: {fileID: 8809434009696813918}
+  - component: {fileID: 8809434009696813919}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -8454,6 +8487,8 @@ MonoBehaviour:
   Accuracy: 3
   Recovery: 2
   Absorsion: 1
+  HasActiveBuff: 0
+  HasActiveDebuff: 0
 --- !u!136 &8809434009696813913
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8521,6 +8556,8 @@ MonoBehaviour:
   Accuracy: 1
   Recovery: 1
   Absorsion: 1
+  HasActiveBuff: 0
+  HasActiveDebuff: 0
 --- !u!114 &8809434009696813918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8531,6 +8568,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 392e2c094371d7143aa3af54328faac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnManager: {fileID: 1360693484}
+--- !u!114 &8809434009696813919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3384513971260087014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5695dd7872414443ac5befb3a66dbdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   turnManager: {fileID: 1360693484}

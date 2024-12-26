@@ -19,13 +19,14 @@ public class ManageHandUI : MonoBehaviour
     public int maxShuffleCount = 3;
     public int maxShuffleCountPerTurn, maxPickCardCountPerTurn = 1;
     public int resetHandCount, pickCardCount, shuffleCount, totalShuffleCount = 0;
+    public int handCount = 0;
 
     private void Update()
     {
-        int handCount = actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack ? playerDeckManager.GetAttackHand().Count : playerDeckManager.GetDefenseHand().Count;
+        handCount = actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack ? playerDeckManager.GetAttackHand().Count : playerDeckManager.GetDefenseHand().Count;
 
         resetHandButton.interactable = resetHandCount < maxResetHandCount;
-        shuffleButton.interactable = shuffleCount < maxShuffleCount && shuffleCount < maxShuffleCountPerTurn;
+        shuffleButton.interactable = totalShuffleCount < maxShuffleCount && shuffleCount < maxShuffleCountPerTurn;
         pickCardButton.interactable = pickCardCount < maxPickCardCountPerTurn && handCount < playerDeckManager.GetMaxHandSize();
     }
 
@@ -45,15 +46,14 @@ public class ManageHandUI : MonoBehaviour
             cardObject.GetComponent<CardInteraction>().SetClickable(true);
         }
 
-        resetHandButton.onClick.AddListener(() => {
-            OnResetHand();
-        });
-        shuffleButton.onClick.AddListener(() => {
-            OnShuffle();
-        });
-        pickCardButton.onClick.AddListener(() => {
-            OnPickCard();
-        });
+        resetHandButton.onClick.RemoveListener(OnResetHand);
+        resetHandButton.onClick.AddListener(OnResetHand);
+
+        shuffleButton.onClick.RemoveListener(OnShuffle);
+        shuffleButton.onClick.AddListener(OnShuffle);
+
+        pickCardButton.onClick.RemoveListener(OnPickCard);
+        pickCardButton.onClick.AddListener(OnPickCard);
     }
 
     private void CompleteStep()
