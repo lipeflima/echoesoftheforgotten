@@ -22,7 +22,7 @@ public class TurnResolver : MonoBehaviour
         defenderData.Defender.ApplyDamage(damage);
 
         // 4. Aplica efeitos de contra-ataque, se houver
-        if (defenderData.CombatAction.DefenderAction.DefenseStrategy == DefenseStrategy.CounterAttack && IsCounterAttackSuccessful(defenderData.Defender.Dexterity, attackerData.Attacker.Dexterity))
+        if (defenderData.CombatAction.DefenderAction.DefenseType == DefenseType.CounterAttack && IsCounterAttackSuccessful(defenderData.Defender.Dexterity, attackerData.Attacker.Dexterity))
         {
             attackerData.Defender.ApplyDamage(defenderData.CombatAction.CalculatedCounterDamage);
         }
@@ -30,13 +30,13 @@ public class TurnResolver : MonoBehaviour
 
     private int ProcessAttack(ActionData attackerData, ActionData defenderData)
     {
-        switch (attackerData.CombatAction.AttackerAction.AttackStrategy)
+        switch (attackerData.CombatAction.AttackerAction.AttackType)
         {
-            case AttackStrategy.Basic:
+            case AttackType.Basic:
                 return Math.Max(0, attackerData.CombatAction.CalculatedAttack - defenderData.CombatAction.CalculatedDefense);
-            case AttackStrategy.CardAttack:
+            case AttackType.CardAttack:
                 return CalculateSpecialAttackDamage(attackerData.CombatAction.AttackerAction.CardEffects.FindAll(effect => effect.statName == "Health"));
-            case AttackStrategy.Fake:
+            case AttackType.FakeAttack:
                 return 0; // Fake attack does no damage
             default:
                 break;

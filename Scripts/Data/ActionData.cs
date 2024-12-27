@@ -45,7 +45,7 @@ public class CombatAction
 
 public class AttackerAction
 {
-    public AttackStrategy AttackStrategy { get; set; }
+    public AttackType AttackType { get; set; }
     public Battler Target { get; set; }
     public List<CardEffectData> CardEffects { get; set; } = new List<CardEffectData>();
     public int Attack { get; set; }
@@ -56,7 +56,7 @@ public class AttackerAction
 
 public class DefenderAction
 {
-    public DefenseStrategy DefenseStrategy { get; set; }
+    public DefenseType DefenseType { get; set; }
     public List<CardEffectData> CardEffects { get; set; } = new List<CardEffectData>();
     public int Defense { get; set; }
     public int Dexterity { get; set; }

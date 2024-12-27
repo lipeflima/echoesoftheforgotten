@@ -58,6 +58,7 @@ public class SelectCardsUI : MonoBehaviour
         foreach(var selectedCard in cardUI.GetSelectedCards())
         {
             cardUI.HighlightCard(selectedCard, false);
+            cardUI.AddCardToTable(selectedCard);
 
             foreach(var effect in selectedCard.effects)
             {

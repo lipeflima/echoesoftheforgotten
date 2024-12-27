@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public class CardUI : MonoBehaviour
     public event Action<CardUI> OnCardClicked;
     [SerializeField] private GameObject cardUIPrefab;
     [SerializeField] private Transform handContainer;
+    [SerializeField] private Transform tableContainer;
     private List<GameObject> cardObjects = new List<GameObject>();
     [SerializeField] private List<Card> selectedCards = new List<Card>();
     public bool isSelectCardsActive = false;
@@ -54,6 +56,16 @@ public class CardUI : MonoBehaviour
         cardObject.GetComponent<RotateCard>().Rotate();
     }
 
+    public void AddCardToTable(Card card)
+    {
+        Debug.Log("Add card to Table!!!!!");
+        GameObject cardObject = cardObjects.Find(c => c.GetComponent<CardDisplay>().GetCard() == card);
+        if (cardObject != null)
+        {
+            StartCoroutine(MoveToPosition(cardObject, tableContainer));
+        }
+    }
+
     public void HighlightCard(Card card, bool highlight)
     {
         GameObject cardObject = cardObjects.Find(c => c.GetComponent<CardDisplay>().GetCard() == card);
@@ -70,7 +82,7 @@ public class CardUI : MonoBehaviour
 
     public void DisplayCardUI(bool visible)
     {
-        gameObject.SetActive(visible);
+        gameObject.transform.GetChild(0).gameObject.SetActive(visible);
     }
 
     public void ToggleCardSelection(Card card)
@@ -102,5 +114,23 @@ public class CardUI : MonoBehaviour
     public void ActivateSelectCard(bool status)
     {
         isSelectCardsActive = status;
+    }
+
+    private IEnumerator MoveToPosition(GameObject obj, Transform target)
+    {
+        float duration = 0.5f; // Tempo da transição
+        Vector3 start = obj.transform.position;
+        Vector3 end = target.position;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            obj.transform.position = Vector3.Lerp(start, end, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        obj.transform.position = end;
+        obj.transform.SetParent(target, true); // Torna-se filho após o movimento
     }
 }
