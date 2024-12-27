@@ -158,8 +158,8 @@ public class PlayerDeckManager : MonoBehaviour
         defenseDeck = new Deck(defenseCards);
 
         // Inicializar as mãos
-        DrawHand(attackDeck, attackHand);
-        DrawHand(defenseDeck, defenseHand);
+        DrawToAttackHand(4);
+        DrawToDefenseHand(4);
     }
 }
 

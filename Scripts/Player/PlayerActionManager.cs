@@ -28,17 +28,17 @@ public class PlayerActionManager : MonoBehaviour
 
     public void Start()
     {
-        List<Card> currentHand = actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack 
-            ? playerDeckManager.GetAttackHand() 
-            : playerDeckManager.GetDefenseHand();
-
-        cardUI.InitializeHand(currentHand);
         cardUI.InitializeData(actionData);
     }
 
     public void StartAction(ActionData data)
     {
         actionData = data;
+        List<Card> currentHand = actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack 
+            ? playerDeckManager.GetAttackHand() 
+            : playerDeckManager.GetDefenseHand();
+
+        cardUI.InitializeHand(currentHand);
         StartManageHand();
         generalUI.Initialize(actionData);
         cardUI.InitializeGeneralUI();
@@ -133,6 +133,7 @@ public class PlayerActionManager : MonoBehaviour
     private void ConfirmAction()
     {
         generalUI.gameObject.SetActive(false);
+        cardUI.ClearHand();
         // Aqui você aplica as ações do jogador.
         turnManager.SetPlayerActionCompleted();
     }

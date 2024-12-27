@@ -12,7 +12,7 @@ public class CardUI : MonoBehaviour
     public event Action<CardUI> OnCardClicked;
     [SerializeField] private GameObject cardUIPrefab;
     [SerializeField] private Transform handContainer;
-    private List<GameObject> cardObjects = new List<GameObject>();
+    [SerializeField] private List<GameObject> cardObjects = new List<GameObject>();
     [SerializeField] private List<Card> selectedCards = new List<Card>();
     private GeneralUI generalUI;
     public bool isSelectCardsActive = false;

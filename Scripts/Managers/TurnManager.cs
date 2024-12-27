@@ -144,6 +144,7 @@ public class TurnManager : MonoBehaviour {
             }
 
             turnResolver.ResolveTurn(actionData);
+            SetCurrentSpentEnergy(0);
             NextTurn();
         }
     }
