@@ -14,6 +14,7 @@ public class GeneralUI : MonoBehaviour
     public void Initialize(ActionData data)
     {
         actionData = data;
+        InitializeEnemiesStatsUI();
         gameObject.SetActive(true);
         SetCurrentAvailableEnergyUI(data.PlayerStats.Mana);
         SetCurrentSpentEnergyUI(actionData.PlayerTurnSpentEnergy);
@@ -37,5 +38,13 @@ public class GeneralUI : MonoBehaviour
     public void Hide()
     {
         gameObject.SetActive(false);
+    }
+
+    public void InitializeEnemiesStatsUI()
+    {
+        foreach(var enemy in actionData.EnemiesStats)
+        {
+           enemy.battlerGameobject.GetComponent<CharacterBar>().UpdateUI(enemy.Health);
+        }
     }
 }

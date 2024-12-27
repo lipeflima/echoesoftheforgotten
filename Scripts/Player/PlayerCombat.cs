@@ -12,7 +12,7 @@ public class  PlayerCombat : Battler
 
     public override void TakeAction(ActionData actionData)
     {
-        Debug.Log($"{actionData.PlayerStats.Name} está iniciando as ações!");
+        Debug.Log($"{Name} está iniciando as ações contra {actionData.Defender.Name}");
 
         actionManager = battlerGameobject.GetComponent<PlayerActionManager>();
         
@@ -55,5 +55,10 @@ public class  PlayerCombat : Battler
             case "ArmourPenetration": ArmourPenetration += value; break;
             case "Accuracy": Accuracy += value; break;
         }
+    }
+
+    public override void SetMana(int amount)
+    {
+        Mana+=amount;
     }
 }

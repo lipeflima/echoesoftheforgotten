@@ -7,7 +7,6 @@ public class BestBuff : IStrategy
 {
     public Card Execute(EnemyContext context)
     {
-        Debug.Log($"Analisando BestBuff Strategy");
         if (context.cardsInHand.Count > 0)
         {
             return context.cardsInHand

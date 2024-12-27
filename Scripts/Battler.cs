@@ -54,9 +54,11 @@ public abstract class Battler
     public void ApplyDamage(int damage)
     {
         Health -= damage;
+        battlerGameobject.GetComponent<CharacterBar>().UpdateUI(Health);
     }
 
     // Método para aplicar alterações diretas
     public abstract void ModifyStat(string statName, float value);
+    public abstract void SetMana(int amount);
 }
 

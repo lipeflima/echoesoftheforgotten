@@ -3,8 +3,8 @@ using static ActionManager;
 
 public class EnemyContext
 {
-    public CharacterStats attackerStats; // Estatísticas do atacante
-    public CharacterStats defenderStats; // Estatísticas do defensor
+    public Battler attackerStats; // Estatísticas do atacante
+    public Battler defenderStats; // Estatísticas do defensor
     public List<Card> cardsInHand; // Cartas disponíveis para defesa
     public int availableEnergy; // Energia disponível para usar cartas
     public AttackerAction attackerData; // Última ação do atacante

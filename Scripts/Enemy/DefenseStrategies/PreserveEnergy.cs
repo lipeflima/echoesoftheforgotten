@@ -9,7 +9,6 @@ public class PreserveEnergy : IStrategy
     [SerializeField] private int energyThreshold = 5;
     public Card Execute(EnemyContext context)
     {
-        Debug.Log($"Analisando PreserveEnergy Strategy");
         if (context.availableEnergy <= energyThreshold)
         {
             if (context.defenderStats.Health > healthThreshold)

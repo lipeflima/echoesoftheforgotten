@@ -79,12 +79,10 @@ public class EnemyDefenseAction : MonoBehaviour
 
         context.HasStrategyApplied = strategyApplied;
         data.CombatAction.DefenderAction.DefenseType = DetermineDefenseStrategy(context);
-        Debug.Log($"Defense strategy: {data.CombatAction.DefenderAction.DefenseType}");
     }
 
     private void SelectCard(Card card, EnemyContext context)
     {
-        Debug.Log($"Inimigo selecionou uma carta: {card.cardName}");
         context.cardsInHand.Remove(card);
         context.selectedCards.Add(card);
     }
@@ -94,10 +92,10 @@ public class EnemyDefenseAction : MonoBehaviour
     {
         return new EnemyContext
         {
-            attackerStats = data.PlayerStats,
-            defenderStats = data.EnemyStats,
+            attackerStats = data.Attacker,
+            defenderStats = data.Defender,
             cardsInHand = data.CardData.DefenderSelectedCards,
-            availableEnergy = data.EnemyStats.Mana, // Exemplo
+            availableEnergy = data.Defender.Mana, // Exemplo
             attackerData = data.CombatAction.AttackerAction,
             selectedCards = new(),
         };

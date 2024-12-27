@@ -9,9 +9,8 @@ public class BlockStrongAttacks : IStrategy
     [SerializeField] private int strongAttackThreshold = 10;
     public Card Execute(EnemyContext context)
     {
-        Debug.Log($"Analisando BlockStrongAttack Strategy");
         // Avaliar se o ataque é forte
-        if (context.attackerData.Attack > strongAttackThreshold && context.availableEnergy >= energyThreshold)
+        if (context.attackerStats.Attack > strongAttackThreshold && context.availableEnergy >= energyThreshold)
         {
             // Use uma carta de bloqueio forte
             return context.cardsInHand

@@ -12,11 +12,14 @@ public class TurnResolver : MonoBehaviour
     private static System.Random random = new System.Random();
     public void ResolveTurn(ActionData actionData)
     {
-        Debug.Log("Resolvendo o Turno");   
-        // 1. Aplica buffs e debuffs
+        Debug.Log($"Resolvendo o Turno Attacker: {actionData.Attacker.Name} Defender: {actionData.Defender.Name}");   
+
+        // 1. Aplica mana
+        ApplyManaEnergy(actionData);
+        // 2. Aplica buffs e debuffs
         ApplyBuffsAndDebuffs(actionData.CombatAction.AttackerAction.CardEffects, actionData.Defender);
         
-        // 2. Processa o ataque
+        // 3. Processa o ataque
         int damage = ProcessAttack(actionData);
         int avoidedDamage = ProcessDefense(actionData);
 
@@ -25,17 +28,19 @@ public class TurnResolver : MonoBehaviour
 
         bool hasCounterAttack = IsCounterAttackSuccessful(actionData.Defender.Dexterity, actionData.Attacker.Dexterity) && actionData.CombatAction.DefenderAction.DefenseType == DefenseType.CounterAttack;
 
-        // 3. Aplica o resultado ao defensor
-        // 4. Aplica efeitos de contra-ataque, se houver
+        // 4. Aplica o resultado ao defensor ou Aplica efeitos de contra-ataque no atacante, se houver.
         if (!hasCounterAttack) {
-            Debug.Log($"Defender Health Before: {actionData.Defender.Health}");
             actionData.Defender.ApplyDamage(damage - avoidedDamage);
-            Debug.Log($"Defender Health After: {actionData.Defender.Health}");
         } else {
-            Debug.Log($"Attacker Health Before: {actionData.Attacker.Health}");
             actionData.Attacker.ApplyDamage(avoidedDamage);
-            Debug.Log($"Attacker Health After: {actionData.Attacker.Health}");
         }
+    }
+
+    private void ApplyManaEnergy(ActionData actionData)
+    {
+        Debug.Log($"Resolvendo energia de Mana: ");
+        actionData.Attacker.SetMana(-actionData.PlayerTurnSpentEnergy);
+        actionData.PlayerTurnSpentEnergy = 0;
     }
 
     private int ProcessAttack(ActionData actionData)
@@ -92,7 +97,7 @@ public class TurnResolver : MonoBehaviour
     {
         Debug.Log($"StatName {effect.statName}");
         Debug.Log($"value {effect.value}");
-        Debug.Log($"Battler {target.Name}");
+        Debug.Log($">>>>>>>>>Battler {target.Name}");
         // Aplica o buff imediatamente
         target.ModifyStat(effect.statName, effect.value);
 

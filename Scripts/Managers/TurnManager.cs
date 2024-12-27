@@ -8,7 +8,6 @@ using UnityEngine;
 public class TurnManager : MonoBehaviour {
     public List<Battler> battlers = new List<Battler>();
     private int currentTurnIndex = 0;
-    private int energyPool = 10;
     public Battler currentDefender { get; set; }
     public Battler currentAttacker { get; set; }
     private TargetManager targetManager;
@@ -62,7 +61,7 @@ public class TurnManager : MonoBehaviour {
                 var playerComponent = playerObject.AddComponent<BattlerComponent>();
                 playerComponent.battler = player;
                 battlers.Add(player);
-                actionData.PlayerStats = playerStats;
+                actionData.PlayerStats = player;
             }
         }
         
@@ -95,7 +94,8 @@ public class TurnManager : MonoBehaviour {
                 var enemyComponent = enemyObject.AddComponent<BattlerComponent>();
                 enemyComponent.battler = enemy;
                 battlers.Add(enemy);
-                actionData.EnemyStats = enemyStats;
+                actionData.EnemiesStats.Add(enemy);
+                Debug.Log($"EnemiesStats {actionData.EnemiesStats}");
             }
         }
 
@@ -184,7 +184,7 @@ public class TurnManager : MonoBehaviour {
         if (targetManager != null)
         {
             List<GameObject> battlerObjects = battlers.Select(b => b.battlerGameobject).ToList();
-            targetManager.InitializeTargets(battlers, battlerObjects);
+            targetManager.InitializeTargets(battlers, battlerObjects, actionData);
         }
     }
 

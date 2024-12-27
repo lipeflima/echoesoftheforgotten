@@ -42,4 +42,9 @@ public class Enemy : Battler
             case "Accuracy": Accuracy += value; break;
         }
     }
+
+    public override void SetMana(int amount)
+    {
+        Mana+=amount;
+    }
 }

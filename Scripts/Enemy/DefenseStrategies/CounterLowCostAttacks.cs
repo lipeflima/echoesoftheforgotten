@@ -10,7 +10,6 @@ public class CounterLowCostAttacks : IStrategy
     private static System.Random random = new System.Random();
     public Card Execute(EnemyContext context)
     {
-        Debug.Log($"Analisando CounterLowCost Strategy");
         if (context.attackerData.EnergyCost <= attackerLowManaCostBase && context.availableEnergy >= moderateAvailableEnergyBase)
         {
             return context.cardsInHand

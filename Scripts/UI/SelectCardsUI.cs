@@ -56,30 +56,32 @@ public class SelectCardsUI : MonoBehaviour
 
     private void CompleteStep()
     {
+        List<Card> attackCardsToDiscard = new();
+        List<Card> defenseCardsToDiscard = new();
         foreach(var selectedCard in cardUI.GetSelectedCards())
         {
             cardUI.HighlightCard(selectedCard, false);
-            cardUI.AddCardToTable(selectedCard);
-            playerDeckManager.AddCardToTable(selectedCard);
 
             foreach(var effect in selectedCard.effects)
             {
                 if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
                 {
+                    attackCardsToDiscard.Add(selectedCard);
                     actionData.CombatAction.AttackerAction.CardEffects.Add(effect); 
                 } else {
+                    defenseCardsToDiscard.Add(selectedCard);
                     actionData.CombatAction.DefenderAction.CardEffects.Add(effect);
                 }
             }
 
             if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
             {
+                playerDeckManager.DiscardFromAttackHand(attackCardsToDiscard);
                 actionData.CombatAction.AttackerAction.EnergyCost += selectedCard.EnergyCost;
-                playerDeckManager.RemoveCardFromAttackHand(selectedCard);
                 actionData.CardData.AttackerSelectedCards.Add(selectedCard);
             } else {
+                playerDeckManager.DiscardFromDefenseHand(defenseCardsToDiscard);
                 actionData.CombatAction.DefenderAction.EnergyCost += selectedCard.EnergyCost;
-                playerDeckManager.RemoveCardFromDefenseHand(selectedCard);
                 actionData.CardData.DefenderSelectedCards.Add(selectedCard);
             }
         }

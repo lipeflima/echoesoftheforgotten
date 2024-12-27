@@ -19,8 +19,6 @@ public class EnemyActionManager : MonoBehaviour
     {
         while (true)
         {
-            Debug.Log("Início do turno do inimigo");
-
             // Etapa 1: Pegar cartas até completar a mão
             FillHand();
 
@@ -37,8 +35,6 @@ public class EnemyActionManager : MonoBehaviour
 
             // Etapa 4: Resolver a ação
             yield return StartCoroutine(ResolveAction(selectedCard, target));
-
-            Debug.Log("Fim do turno do inimigo");
 
             yield break; // Encerrar a corrotina para o turno do inimigo
         }

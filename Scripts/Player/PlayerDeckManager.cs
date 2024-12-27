@@ -11,9 +11,9 @@ public class PlayerDeckManager : MonoBehaviour
 
     [SerializeField] private List<Card> attackHand = new List<Card>();
     [SerializeField] private List<Card> defenseHand = new List<Card>();
-    [SerializeField] private List<Card> table = new List<Card>();
     private int maxHandSize = 4;
     private int minimumDeckSize = 20;
+    [SerializeField] private List<Card> discardPile = new();
     [SerializeField] private SharedCardPool cardPool;
 
     public void Awake()
@@ -95,26 +95,6 @@ public class PlayerDeckManager : MonoBehaviour
     {
         playerDeck.UseCard(selectedCard, target);
     } */
-
-    public void AddCardToTable(Card card)
-    {
-        table.Add(card);
-    }
-
-    public void RemoveCardFromTable(Card card)
-    {
-        table.Remove(card);
-    }
-
-    public void RemoveCardFromAttackHand(Card card)
-    {
-        attackHand.Remove(card);
-    }
-
-    public void RemoveCardFromDefenseHand(Card card)
-    {
-        defenseHand.Remove(card);
-    }
 
     public int GetMaxHandSize()
     {

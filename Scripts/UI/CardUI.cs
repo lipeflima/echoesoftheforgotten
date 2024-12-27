@@ -12,7 +12,6 @@ public class CardUI : MonoBehaviour
     public event Action<CardUI> OnCardClicked;
     [SerializeField] private GameObject cardUIPrefab;
     [SerializeField] private Transform handContainer;
-    [SerializeField] private Transform tableContainer;
     private List<GameObject> cardObjects = new List<GameObject>();
     [SerializeField] private List<Card> selectedCards = new List<Card>();
     private GeneralUI generalUI;
@@ -59,17 +58,6 @@ public class CardUI : MonoBehaviour
         var interaction = cardObject.GetComponent<CardInteraction>();
         interaction.Initialize(uniqueCard);
         cardObject.GetComponent<RotateCard>().Rotate();
-    }
-
-    public void AddCardToTable(Card card)
-    {
-        GameObject cardObject = cardObjects.Find(c => c.GetComponent<CardDisplay>().GetCard() == card);
-        if (cardObject != null)
-        {
-            StartCoroutine(MoveToPosition(cardObject, tableContainer));
-        }
-
-        // TODO: Spend Mana
     }
 
     public void HighlightCard(Card card, bool highlight)
