@@ -26,7 +26,6 @@ public class PlayerActionPanel : MonoBehaviour {
     public void OnPickCardAction()
     {
         DisplayActionButton(pickCardUI, () => {
-            Debug.Log("Comprar Carta");
             pickCardUI.SetActive(false);
             // playerActionManager.PickCardAction();
             
@@ -36,7 +35,6 @@ public class PlayerActionPanel : MonoBehaviour {
     public void OnShuffleAction()
     {
         DisplayActionButton(shuffleCardUI, () => {
-            Debug.Log("Embaralhar Deck");
             discardCardUI.SetActive(false);
             shuffleCardUI.SetActive(false);
             regenerateHandUI.SetActive(false);
@@ -48,7 +46,6 @@ public class PlayerActionPanel : MonoBehaviour {
     public void OnDiscardAction()
     {
         DisplayActionButton(discardCardUI, () => {
-            Debug.Log("Descartar Carta");
             discardCardUI.SetActive(false);
             shuffleCardUI.SetActive(false);
             regenerateHandUI.SetActive(false);
@@ -60,7 +57,6 @@ public class PlayerActionPanel : MonoBehaviour {
     public void OnRegenerateHandAction()
     {
         DisplayActionButton(regenerateHandUI, () => {
-            Debug.Log("Regenerar Mão");
             discardCardUI.SetActive(false);
             shuffleCardUI.SetActive(false);
             regenerateHandUI.SetActive(false);
@@ -72,7 +68,6 @@ public class PlayerActionPanel : MonoBehaviour {
     public void OnSelectCardAction()
     {
         DisplayActionButton(selectCardUI, () => {
-            Debug.Log("Selecionar Carta");
             selectCardUI.SetActive(false);
             // playerActionManager.SelectCardAction();
             
@@ -82,7 +77,6 @@ public class PlayerActionPanel : MonoBehaviour {
     public void OnSelectTargetAction()
     {
         DisplayActionButton(selectTargetUI, () => {
-            Debug.Log("Selecionar Alvo");
             selectTargetUI.SetActive(false);
             // playerActionManager.SelectTargetAction();
             
@@ -92,7 +86,6 @@ public class PlayerActionPanel : MonoBehaviour {
     public void OnResolveTurnAction()
     {
         DisplayActionButton(resolveTurnUI, () => {
-            Debug.Log("Resolver Turno");
             resolveTurnUI.SetActive(false);
             // playerActionManager.ResolveTurnAction();
             

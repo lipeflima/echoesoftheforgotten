@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,14 @@ public class TurnManager : MonoBehaviour {
     public Battler currentDefender { get; set; }
     public Battler currentAttacker { get; set; }
     private TargetManager targetManager;
+    private TurnResolver turnResolver;
     private ActionData actionData;
     private int turnCount = 0;
     private bool IsPlayerActionCompleted = false;
 
     void Start() 
     {
+        InitializeTurnManager();
         InitializeActionData();
         InitializeBattlers();
         StartTurnCycle();
@@ -39,8 +42,21 @@ public class TurnManager : MonoBehaviour {
                 PlayerCombat player = new(
                     playerStats.Name,
                     playerStats.Initiative,
+                    true,
                     playerStats.Health,
-                    playerStats.Mana
+                    playerStats.Mana,
+                    playerStats.Attack,
+                    playerStats.Defense,
+                    playerStats.Dexterity,
+                    playerStats.Resistance,
+                    playerStats.Mentality,
+                    playerStats.Luck,
+                    playerStats.CriticalDamage,
+                    playerStats.CriticalChance,
+                    playerStats.ArmourPenetration,
+                    playerStats.Recovery,
+                    playerStats.Absorsion,
+                    playerStats.Accuracy
                 );
                 player.battlerGameobject = playerObject;
                 var playerComponent = playerObject.AddComponent<BattlerComponent>();
@@ -59,8 +75,21 @@ public class TurnManager : MonoBehaviour {
                 Enemy enemy = new(
                     enemyStats.Name,
                     enemyStats.Initiative,
+                    false,
                     enemyStats.Health,
-                    enemyStats.Mana
+                    enemyStats.Mana,
+                    enemyStats.Attack,
+                    enemyStats.Defense,
+                    enemyStats.Dexterity,
+                    enemyStats.Resistance,
+                    enemyStats.Mentality,
+                    enemyStats.Luck,
+                    enemyStats.CriticalDamage,
+                    enemyStats.CriticalChance,
+                    enemyStats.ArmourPenetration,
+                    enemyStats.Recovery,
+                    enemyStats.Absorsion,
+                    enemyStats.Accuracy
                 );
                 enemy.battlerGameobject = enemyObject;
                 var enemyComponent = enemyObject.AddComponent<BattlerComponent>();
@@ -83,9 +112,9 @@ public class TurnManager : MonoBehaviour {
             currentAttacker = battlers[currentTurnIndex];
             if (!currentAttacker.IsPlayer)
             {
-                currentDefender = battlers.Find(battler => battler.IsPlayer); 
+                currentDefender = battlers.Find(battler => battler.IsPlayer);
             } else {
-                currentDefender = battlers.Where(b => !b.IsPlayer).OrderByDescending(b => b.Initiative).FirstOrDefault();   
+                currentDefender = battlers.Where(b => !b.IsPlayer).OrderByDescending(b => b.Initiative).FirstOrDefault();
             }
 
             targetManager.HighlightAttacker(currentAttacker.battlerGameobject);
@@ -114,10 +143,7 @@ public class TurnManager : MonoBehaviour {
                 yield return StartCoroutine(WaitForDefenderActionComplete());
             }
 
-            // TurnResolver resolver = new TurnResolver();
-            // resolver.ResolveTurn(attackerData, defenderData);
-
-
+            turnResolver.ResolveTurn(actionData);
             NextTurn();
         }
     }
@@ -162,6 +188,11 @@ public class TurnManager : MonoBehaviour {
         }
     }
 
+    private void InitializeTurnManager()
+    {
+        turnResolver = FindObjectOfType<TurnResolver>();
+    }
+
     public void InitializeActionData()
     {
         actionData = new ActionData();
@@ -172,8 +203,8 @@ public class TurnManager : MonoBehaviour {
         IsPlayerActionCompleted = true;
     }
 
-    public int GetAvailableEnergy()
+    public void SetCurrentSpentEnergy(int amount)
     {
-        return energyPool;
+        actionData.PlayerTurnSpentEnergy += amount;
     }
 }

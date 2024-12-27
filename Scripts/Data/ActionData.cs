@@ -10,6 +10,7 @@ public class ActionData
     public CharacterStats PlayerStats { get; set; }
     public CharacterStats EnemyStats { get; set; }
     public CurrentTurnAction CurrentTurnAction { get; set; }
+    public int PlayerTurnSpentEnergy { get; set; } = 0;
     public CombatAction CombatAction { get; set; }
     // public Dictionary<string, object> CustomData = new Dictionary<string, object>();
     public CardData CardData { get; set; }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: "C\xE2mara submersa"
   description: 'Uma bolha '
-  manaCost: 2
+  EnergyCost: 3
   behaviorClassName: SubmersedChamberBehavior
   artwork: {fileID: 0}
   effects:

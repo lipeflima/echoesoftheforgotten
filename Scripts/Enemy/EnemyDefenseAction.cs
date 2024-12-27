@@ -125,9 +125,4 @@ public class EnemyDefenseAction : MonoBehaviour
     private bool HasBuffOrDebuffCard(EnemyContext context) =>
         context.selectedCards.Any(card => card.effects.Any(effect =>
             effect.effectType == Card.CardType.Buff || effect.effectType == Card.CardType.Debuff));
-
-    private int GetAvailableEnergy()
-    {
-        return turnManager.GetAvailableEnergy();
-    }
 }

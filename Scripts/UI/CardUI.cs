@@ -15,12 +15,17 @@ public class CardUI : MonoBehaviour
     [SerializeField] private Transform tableContainer;
     private List<GameObject> cardObjects = new List<GameObject>();
     [SerializeField] private List<Card> selectedCards = new List<Card>();
+    private GeneralUI generalUI;
     public bool isSelectCardsActive = false;
     private int maxSelectableCards = 2;
+    private TurnManager turnManager;
+    [SerializeField] private int playerSpentEnergy = 0;
 
     public void Awake()
     {
         instance = this;
+        generalUI = FindObjectOfType<GeneralUI>();
+        turnManager = FindObjectOfType<TurnManager>();
     }
 
     public void InitializeData(ActionData data)
@@ -58,12 +63,13 @@ public class CardUI : MonoBehaviour
 
     public void AddCardToTable(Card card)
     {
-        Debug.Log("Add card to Table!!!!!");
         GameObject cardObject = cardObjects.Find(c => c.GetComponent<CardDisplay>().GetCard() == card);
         if (cardObject != null)
         {
             StartCoroutine(MoveToPosition(cardObject, tableContainer));
         }
+
+        // TODO: Spend Mana
     }
 
     public void HighlightCard(Card card, bool highlight)
@@ -82,7 +88,7 @@ public class CardUI : MonoBehaviour
 
     public void DisplayCardUI(bool visible)
     {
-        gameObject.transform.GetChild(0).gameObject.SetActive(visible);
+        gameObject.transform.GetChild(0).transform.GetChild(0).gameObject.SetActive(visible);
     }
 
     public void ToggleCardSelection(Card card)
@@ -93,12 +99,26 @@ public class CardUI : MonoBehaviour
         {
             selectedCards.Remove(card);
             HighlightCard(card, false);
+            playerSpentEnergy += -card.EnergyCost;
+            generalUI.SetCurrentSpentEnergyUI(playerSpentEnergy);
         }
         else if (selectedCards.Count < maxSelectableCards && card.EnergyCost <= actionData.PlayerStats.Mana)
         {
             selectedCards.Add(card);
             HighlightCard(card, true);
+            playerSpentEnergy += card.EnergyCost;
+            generalUI.SetCurrentSpentEnergyUI(playerSpentEnergy);
         }
+    }
+
+    public void UpdateSpentEnergyCounter()
+    {   
+        turnManager.SetCurrentSpentEnergy(playerSpentEnergy);
+    }
+
+    public void InitializeGeneralUI()
+    {
+        generalUI = FindObjectOfType<GeneralUI>();
     }
 
     public List<Card> GetSelectedCards()

@@ -64,7 +64,6 @@ public class ManageHandUI : MonoBehaviour
 
     private void OnResetHand()
     {
-        Debug.Log("Reset Hand");
         _ = new List<Card>();
         var maxHandSize = playerDeckManager.GetMaxHandSize();
         cardUI.ClearHand();
@@ -72,7 +71,6 @@ public class ManageHandUI : MonoBehaviour
         List<Card> newHand;
         if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
         {
-            Debug.Log("Resetando hand de ataque");
             discardHand = playerDeckManager.GetAttackHand();
             playerDeckManager.DiscardFromAttackHand(discardHand);
             playerDeckManager.DrawToAttackHand(maxHandSize);
@@ -80,10 +78,9 @@ public class ManageHandUI : MonoBehaviour
         }
         else
         {
-            Debug.Log("Resetando hand de defesa");
             discardHand = playerDeckManager.GetDefenseHand();
             playerDeckManager.DiscardFromDefenseHand(discardHand);
-            // playerDeckManager.DrawToDefenseHand(maxHandSize);
+            playerDeckManager.DrawToDefenseHand(maxHandSize);
             newHand = playerDeckManager.GetDefenseHand();
         }
 
@@ -94,7 +91,6 @@ public class ManageHandUI : MonoBehaviour
 
     private void OnShuffle()
     {
-        Debug.Log("Shuffle Deck");
         if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
         {
             playerDeckManager.ShuffleAttackDeck();
@@ -109,7 +105,6 @@ public class ManageHandUI : MonoBehaviour
 
     private void OnPickCard()
     {
-        Debug.Log("Pick Card");
         Card newcard = new();
         if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
         {

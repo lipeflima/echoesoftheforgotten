@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Aura Inspiradora
   description: Uma aura inspiradora
-  manaCost: 4
+  EnergyCost: 4
   behaviorClassName: InspiringAura
   artwork: {fileID: 0}
   effects:

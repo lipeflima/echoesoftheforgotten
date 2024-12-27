@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: RootWall
   description: RooWall
-  manaCost: 2
+  EnergyCost: 3
   behaviorClassName: RootWallBehavior
   artwork: {fileID: 0}
   effects:

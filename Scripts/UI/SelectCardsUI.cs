@@ -9,6 +9,7 @@ public class SelectCardsUI : MonoBehaviour
 {
     [SerializeField] private Button nextButton; // Botão de avançar
     [SerializeField] private TMP_Text energyText; // Texto para exibir a energia disponível
+    [SerializeField] private PlayerDeckManager playerDeckManager;
 
     private Action onComplete;
     private ActionData actionData;
@@ -59,6 +60,7 @@ public class SelectCardsUI : MonoBehaviour
         {
             cardUI.HighlightCard(selectedCard, false);
             cardUI.AddCardToTable(selectedCard);
+            playerDeckManager.AddCardToTable(selectedCard);
 
             foreach(var effect in selectedCard.effects)
             {
@@ -73,26 +75,29 @@ public class SelectCardsUI : MonoBehaviour
             if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
             {
                 actionData.CombatAction.AttackerAction.EnergyCost += selectedCard.EnergyCost;
+                playerDeckManager.RemoveCardFromAttackHand(selectedCard);
+                actionData.CardData.AttackerSelectedCards.Add(selectedCard);
             } else {
                 actionData.CombatAction.DefenderAction.EnergyCost += selectedCard.EnergyCost;
+                playerDeckManager.RemoveCardFromDefenseHand(selectedCard);
+                actionData.CardData.DefenderSelectedCards.Add(selectedCard);
             }
-        }
-
-        if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
-        {
-            actionData.CardData.AttackerSelectedCards = cardUI.GetSelectedCards();
-        } else {
-            actionData.CardData.DefenderSelectedCards = cardUI.GetSelectedCards();
         }
 
         cardUI.ClearSelectedCards();
         gameObject.SetActive(false);
         cardUI.DisplayCardUI(false);
+        cardUI.UpdateSpentEnergyCounter();
         isSelectCardsActive = false;
         onComplete?.Invoke();
     }
 
     private void UpdateEnergyText()
+    {
+        energyText.text = $"Energy: {availableEnergy}";
+    }
+
+    private void UpdateSpentEnergyText()
     {
         energyText.text = $"Energy: {availableEnergy}";
     }
