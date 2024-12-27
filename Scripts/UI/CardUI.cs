@@ -47,6 +47,8 @@ public class CardUI : MonoBehaviour
             Destroy(cardObject);
         }
         cardObjects.Clear();
+        
+        playerSpentEnergy = 0;
     }
 
     public void AddCard(Card card)
@@ -57,7 +59,6 @@ public class CardUI : MonoBehaviour
         cardObjects.Add(cardObject);
         var interaction = cardObject.GetComponent<CardInteraction>();
         interaction.Initialize(uniqueCard);
-        cardObject.GetComponent<RotateCard>().Rotate();
     }
 
     public void HighlightCard(Card card, bool highlight)
@@ -122,23 +123,5 @@ public class CardUI : MonoBehaviour
     public void ActivateSelectCard(bool status)
     {
         isSelectCardsActive = status;
-    }
-
-    private IEnumerator MoveToPosition(GameObject obj, Transform target)
-    {
-        float duration = 0.5f; // Tempo da transição
-        Vector3 start = obj.transform.position;
-        Vector3 end = target.position;
-
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            obj.transform.position = Vector3.Lerp(start, end, elapsed / duration);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        obj.transform.position = end;
-        obj.transform.SetParent(target, true); // Torna-se filho após o movimento
     }
 }

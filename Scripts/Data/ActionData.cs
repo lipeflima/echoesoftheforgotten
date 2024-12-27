@@ -11,6 +11,7 @@ public class ActionData
     public List<Battler> EnemiesStats = new();
     public CurrentTurnAction CurrentTurnAction { get; set; }
     public int PlayerTurnSpentEnergy { get; set; } = 0;
+    public int EnemyTurnSpentEnergy { get; set; } = 0;
     public CombatAction CombatAction { get; set; }
     // public Dictionary<string, object> CustomData = new Dictionary<string, object>();
     public CardData CardData { get; set; }

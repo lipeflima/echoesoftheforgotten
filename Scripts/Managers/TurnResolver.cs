@@ -38,9 +38,16 @@ public class TurnResolver : MonoBehaviour
 
     private void ApplyManaEnergy(ActionData actionData)
     {
-        Debug.Log($"Resolvendo energia de Mana: ");
-        actionData.Attacker.SetMana(-actionData.PlayerTurnSpentEnergy);
+        Debug.Log($"Resolvendo energia de Mana");
+        Debug.Log($"Player Mana: {actionData.PlayerTurnSpentEnergy}");
+        Debug.Log($"Enemy Mana: {actionData.EnemyTurnSpentEnergy}");
+
+        actionData.Attacker.SetMana(actionData.Attacker.IsPlayer ? -actionData.PlayerTurnSpentEnergy : -actionData.EnemyTurnSpentEnergy);
+        actionData.Defender.SetMana(actionData.Defender.IsPlayer ? -actionData.PlayerTurnSpentEnergy : -actionData.EnemyTurnSpentEnergy);
         actionData.PlayerTurnSpentEnergy = 0;
+        actionData.EnemyTurnSpentEnergy = 0;
+        Debug.Log($"Player Mana: {actionData.PlayerTurnSpentEnergy}");
+        Debug.Log($"Enemy Mana: {actionData.EnemyTurnSpentEnergy}");
     }
 
     private int ProcessAttack(ActionData actionData)
@@ -95,9 +102,10 @@ public class TurnResolver : MonoBehaviour
 
     public void ApplyBuff(CardEffectData effect, Battler target)
     {
-        Debug.Log($"StatName {effect.statName}");
-        Debug.Log($"value {effect.value}");
-        Debug.Log($">>>>>>>>>Battler {target.Name}");
+        // Debug.Log($"StatName {effect.statName}");
+        // Debug.Log($"value {effect.value}");
+        // Debug.Log($">>>>>>>>>Battler {target.Name}");
+        
         // Aplica o buff imediatamente
         target.ModifyStat(effect.statName, effect.value);
 

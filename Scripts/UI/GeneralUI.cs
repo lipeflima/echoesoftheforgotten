@@ -16,7 +16,7 @@ public class GeneralUI : MonoBehaviour
         actionData = data;
         InitializeEnemiesStatsUI();
         gameObject.SetActive(true);
-        SetCurrentAvailableEnergyUI(data.PlayerStats.Mana);
+        SetPlayerCurrentAvailableEnergyUI();
         SetCurrentSpentEnergyUI(actionData.PlayerTurnSpentEnergy);
     }
 
@@ -25,9 +25,9 @@ public class GeneralUI : MonoBehaviour
         currentActionState.text = state;
     }
 
-    public void SetCurrentAvailableEnergyUI(int amount)
+    public void SetPlayerCurrentAvailableEnergyUI()
     {
-        currentAvailableEnergy.text = $"Energy: {amount}";
+        currentAvailableEnergy.text = $"Energy: {actionData.PlayerStats.Mana}";
     }
 
     public void SetCurrentSpentEnergyUI(int amount)
