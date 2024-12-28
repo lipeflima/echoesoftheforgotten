@@ -18,11 +18,11 @@ public class SelectDefenseUI : MonoBehaviour
         gameObject.SetActive(true);
         onComplete = onCompleteCallback;
 
+        CardDefenseButton.interactable = HasDefenseCard();
+
         nextButton.interactable = false; 
         nextButton.onClick.RemoveListener(CompleteStep);
         nextButton.onClick.AddListener(CompleteStep);
-
-        CardDefenseButton.interactable = false;
 
         basicDefenseButton.onClick.AddListener(() => {
             OnBasicAttack();
@@ -60,7 +60,7 @@ public class SelectDefenseUI : MonoBehaviour
         nextButton.interactable = true;
         basicDefenseButton.interactable = false; 
         evadeDefenseButton.interactable = true;
-        CardDefenseButton.interactable = HasDefenseCard();;
+        CardDefenseButton.interactable = HasDefenseCard();
         CounterAttackButton.interactable = true;
     }
     
@@ -70,7 +70,7 @@ public class SelectDefenseUI : MonoBehaviour
         nextButton.interactable = true;
         basicDefenseButton.interactable = true; 
         evadeDefenseButton.interactable = false;
-        CardDefenseButton.interactable = HasDefenseCard();;
+        CardDefenseButton.interactable = HasDefenseCard();
         CounterAttackButton.interactable = true;
         
     }
@@ -91,7 +91,7 @@ public class SelectDefenseUI : MonoBehaviour
         nextButton.interactable = true;
         basicDefenseButton.interactable = true; 
         evadeDefenseButton.interactable = true;
-        CardDefenseButton.interactable = HasDefenseCard();;
+        CardDefenseButton.interactable = HasDefenseCard();
         CounterAttackButton.interactable = false;
     }
 }
