@@ -19,7 +19,7 @@ public class SelectCardsUI : MonoBehaviour
     private void Update()
     {
         UpdateInstructionState();
-        UpdateNextButtonState();
+        // UpdateNextButtonState();
     }
 
     public void Initialize(ActionData data, Action onCompleteCallback)
@@ -28,7 +28,7 @@ public class SelectCardsUI : MonoBehaviour
         actionData = data;
         onComplete = onCompleteCallback;
         gameObject.SetActive(true);
-        nextButton.interactable = false;
+        nextButton.interactable = true;
         nextButton.onClick.RemoveListener(CompleteStep);
         nextButton.onClick.AddListener(CompleteStep);
     }
@@ -50,40 +50,68 @@ public class SelectCardsUI : MonoBehaviour
 
     private void CompleteStep()
     {
-        List<Card> attackCardsToDiscard = new();
-        List<Card> defenseCardsToDiscard = new();
-        foreach(var selectedCard in cardUI.GetSelectedCards())
+        List<Card> cardsToRemove = cardUI.GetSelectedCards();
+        List<Card> cardsFromClones = new();
+        
+        bool isAttack = actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack;
+        
+        foreach(var selectedCard in cardsToRemove)
         {
-            cardUI.HighlightCard(selectedCard, false);
-
+            cardUI.HighlightCard(selectedCard, false); 
+             
             foreach(var effect in selectedCard.effects)
             {
-                if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
+                if (isAttack)
                 {
-                    attackCardsToDiscard.Add(selectedCard);
                     actionData.CombatAction.AttackerAction.CardEffects.Add(effect); 
                 } else {
-                    defenseCardsToDiscard.Add(selectedCard);
                     actionData.CombatAction.DefenderAction.CardEffects.Add(effect);
                 }
             }
 
-            if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
-            {
-                playerDeckManager.DiscardFromAttackHand(attackCardsToDiscard);
-                actionData.CombatAction.AttackerAction.EnergyCost += selectedCard.EnergyCost;
-                actionData.CardData.AttackerSelectedCards.Add(selectedCard);
-            } else {
-                playerDeckManager.DiscardFromDefenseHand(defenseCardsToDiscard);
-                actionData.CombatAction.DefenderAction.EnergyCost += selectedCard.EnergyCost;
-                actionData.CardData.DefenderSelectedCards.Add(selectedCard);
-            }
+            GetCardsFromClones(selectedCard, cardsFromClones);
+        }
+
+        if (isAttack)
+        {
+            playerDeckManager.DiscardFromAttackHand(cardsFromClones);
+            actionData.CardData.AttackerSelectedCards = cardsFromClones;
+        } else {
+            playerDeckManager.DiscardFromDefenseHand(cardsFromClones);
+            actionData.CardData.DefenderSelectedCards = cardsFromClones;
         }
 
         cardUI.ClearSelectedCards();
+        cardUI.ActivateSelectCard(false);
         gameObject.SetActive(false);
         cardUI.DisplayCardUI(false);
         isSelectCardsActive = false;
         onComplete?.Invoke();
+    }
+
+    private void GetCardsFromClones(Card selectedCard, List<Card> cardsFromClones)
+    {
+        bool isAttack = actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack;
+
+        if (isAttack)
+        {
+            foreach (Card card in playerDeckManager.GetAttackHand())
+            {
+                if (selectedCard.cardName == card.cardName)
+                {
+                    cardsFromClones.Add(card);
+                    break;
+                }
+            }
+        } else {
+            foreach (Card card in playerDeckManager.GetDefenseHand())
+            {
+                if (selectedCard.cardName == card.cardName)
+                {
+                    cardsFromClones.Add(card);
+                    break;
+                }
+            }
+        }
     }
 }

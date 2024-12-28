@@ -15,11 +15,11 @@ public class ManageHandUI : MonoBehaviour
     [SerializeField] private RawImage deckIndicator;
     private Action onComplete;
     private ActionData actionData;
-    public int maxResetHandCount = 2;
-    public int maxShuffleCount = 3;
-    public int maxShuffleCountPerTurn, maxPickCardCountPerTurn = 1;
-    public int resetHandCount, pickCardCount, shuffleCount, totalShuffleCount = 0;
-    public int handCount = 0;
+    [SerializeField] public int maxResetHandCount = 2;
+    [SerializeField] public int maxShuffleCount = 3;
+    [SerializeField] public int maxShuffleCountPerTurn, maxPickCardCountPerTurn = 2;
+    [SerializeField] public int resetHandCount, pickCardCount, shuffleCount, totalShuffleCount = 0;
+    [SerializeField] public int handCount = 0;
 
     private void Update()
     {
@@ -37,7 +37,6 @@ public class ManageHandUI : MonoBehaviour
         actionData = data;
         gameObject.SetActive(true);
         onComplete = onCompleteCallback;
-        cardUI.ActivateSelectCard(true);
         nextButton.interactable = true; 
         nextButton.onClick.AddListener(CompleteStep);
 

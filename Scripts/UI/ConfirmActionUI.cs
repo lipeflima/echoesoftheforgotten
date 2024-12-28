@@ -32,6 +32,7 @@ public class ConfirmActionUI : MonoBehaviour
 
     private void CancelStep()
     {
+        cardUI.UpdateSpentEnergyCounter();
         gameObject.SetActive(false);
         onCancel?.Invoke();
     }

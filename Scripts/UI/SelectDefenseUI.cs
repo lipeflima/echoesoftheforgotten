@@ -11,6 +11,7 @@ public class SelectDefenseUI : MonoBehaviour
     [SerializeField] private Button CardDefenseButton;
     [SerializeField] private Button CounterAttackButton;
     private ActionData actionData;
+
     public void Initialize(ActionData data, Action onCompleteCallback)
     {
         actionData = data;
@@ -20,6 +21,8 @@ public class SelectDefenseUI : MonoBehaviour
         nextButton.interactable = false; 
         nextButton.onClick.RemoveListener(CompleteStep);
         nextButton.onClick.AddListener(CompleteStep);
+
+        CardDefenseButton.interactable = false;
 
         basicDefenseButton.onClick.AddListener(() => {
             OnBasicAttack();
@@ -35,42 +38,45 @@ public class SelectDefenseUI : MonoBehaviour
         });
     }
 
+    
+    private bool HasDefenseCard()
+    {
+        return actionData.CardData.DefenderSelectedCards.Count > 0;
+    }
+
     private void CompleteStep()
     {
         gameObject.SetActive(false);
         basicDefenseButton.interactable = true; 
         evadeDefenseButton.interactable = true;
-        CardDefenseButton.interactable = true;
+        CardDefenseButton.interactable = HasDefenseCard();
         CounterAttackButton.interactable = true;
         onComplete?.Invoke();
     }
 
     private void OnBasicAttack()
     {
-        Debug.Log($"Player irá usar um ataque basico");
         actionData.CombatAction.DefenderAction.DefenseType = ActionManager.DefenseType.Basic;
         nextButton.interactable = true;
         basicDefenseButton.interactable = false; 
         evadeDefenseButton.interactable = true;
-        CardDefenseButton.interactable = true;
-        CounterAttackButton.interactable = false;
+        CardDefenseButton.interactable = HasDefenseCard();;
+        CounterAttackButton.interactable = true;
     }
     
     private void OnEvadeDefense()
     {
-        Debug.Log($"Player irá fingir um ataque");
         actionData.CombatAction.DefenderAction.DefenseType = ActionManager.DefenseType.Evade;
         nextButton.interactable = true;
         basicDefenseButton.interactable = true; 
         evadeDefenseButton.interactable = false;
-        CardDefenseButton.interactable = true;
-        CounterAttackButton.interactable = false;
+        CardDefenseButton.interactable = HasDefenseCard();;
+        CounterAttackButton.interactable = true;
         
     }
 
     private void OnCardDefense()
     {
-        Debug.Log($"Player irá usar um ataque especial de carta");
         actionData.CombatAction.DefenderAction.DefenseType = ActionManager.DefenseType.CardDefense;
         nextButton.interactable = true;
         basicDefenseButton.interactable = true; 
@@ -81,12 +87,11 @@ public class SelectDefenseUI : MonoBehaviour
 
     private void OnCounterAttack()
     {
-        Debug.Log($"Player irá usar um ataque especial de carta");
         actionData.CombatAction.DefenderAction.DefenseType = ActionManager.DefenseType.CounterAttack;
         nextButton.interactable = true;
         basicDefenseButton.interactable = true; 
         evadeDefenseButton.interactable = true;
-        CardDefenseButton.interactable = true;
+        CardDefenseButton.interactable = HasDefenseCard();;
         CounterAttackButton.interactable = false;
     }
 }

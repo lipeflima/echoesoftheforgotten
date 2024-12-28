@@ -98,8 +98,6 @@ public class CardUI : MonoBehaviour
 
     public void UpdateSpentEnergyCounter()
     {
-        Debug.Log($"playerSpentEnergy: {playerSpentEnergy}");
-        Debug.Log($"PlayerTurnSpentEnergy: {actionData.PlayerTurnSpentEnergy}");
         actionData.PlayerTurnSpentEnergy = playerSpentEnergy;
         playerSpentEnergy = 0;
         generalUI.SetCurrentSpentEnergyUI(playerSpentEnergy);
@@ -123,5 +121,6 @@ public class CardUI : MonoBehaviour
     public void ActivateSelectCard(bool status)
     {
         isSelectCardsActive = status;
+        generalUI.transform.GetChild(2).gameObject.SetActive(status);
     }
 }

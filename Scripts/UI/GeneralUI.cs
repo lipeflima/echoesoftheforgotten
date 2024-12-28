@@ -9,7 +9,6 @@ public class GeneralUI : MonoBehaviour
     [SerializeField] private TMP_Text currentActionState;
     [SerializeField] private TMP_Text currentAvailableEnergy;
     [SerializeField] private TMP_Text currentSpentEnergy;
-    [SerializeField] private int playerSpentEnergy = 0;
     private ActionData actionData;
 
     public void Initialize(ActionData data)
