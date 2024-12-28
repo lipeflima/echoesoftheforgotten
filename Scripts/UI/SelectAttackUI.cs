@@ -19,11 +19,21 @@ public class SelectAttackUI : MonoBehaviour
         nextButton.interactable = false; 
         nextButton.onClick.AddListener(CompleteStep);
 
+        basicAttackButton.onClick.RemoveListener(() => {
+            OnBasicAttack();
+        });
         basicAttackButton.onClick.AddListener(() => {
             OnBasicAttack();
         });
+
+        fakeAttackButton.onClick.RemoveListener(() => {
+            OnFakeAttack();
+        });
         fakeAttackButton.onClick.AddListener(() => {
             OnFakeAttack();
+        });
+        CardAttackButton.onClick.RemoveListener(() => {
+            OnCardAttack();
         });
         CardAttackButton.onClick.AddListener(() => {
             OnCardAttack();
@@ -41,7 +51,6 @@ public class SelectAttackUI : MonoBehaviour
 
     private void OnBasicAttack()
     {
-        Debug.Log($"Player irá usar um ataque basico");
         actionData.CombatAction.AttackerAction.AttackType = ActionManager.AttackType.Basic;
         nextButton.interactable = true;
         basicAttackButton.interactable = false; 
@@ -51,7 +60,6 @@ public class SelectAttackUI : MonoBehaviour
     
     private void OnFakeAttack()
     {
-        Debug.Log($"Player irá fingir um ataque");
         actionData.CombatAction.AttackerAction.AttackType = ActionManager.AttackType.FakeAttack;
         nextButton.interactable = true;
         basicAttackButton.interactable = true; 
@@ -62,7 +70,6 @@ public class SelectAttackUI : MonoBehaviour
 
     private void OnCardAttack()
     {
-        Debug.Log($"Player irá usar um ataque especial de carta");
         actionData.CombatAction.AttackerAction.AttackType = ActionManager.AttackType.CardAttack;
         nextButton.interactable = true;
         basicAttackButton.interactable = true; 

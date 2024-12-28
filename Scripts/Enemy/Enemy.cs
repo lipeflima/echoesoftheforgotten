@@ -16,14 +16,12 @@ public class Enemy : Battler
     public override void TakeAction(ActionData actionData)
     {
         attackAction = battlerGameobject.GetComponent<EnemyAttackAction>();
-        Debug.Log($"{Name} está executando uma ação de IA...");
         attackAction.ExecuteAttack(actionData);
     }
 
     public override void Defend(ActionData actionData)
     {
         defenseAction = battlerGameobject.GetComponent<EnemyDefenseAction>();
-        Debug.Log($"{Name} está se defendendo contra {actionData.Attacker.Name}");
         defenseAction.ExecuteDefense(actionData);
     }
 

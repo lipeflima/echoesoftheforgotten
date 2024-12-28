@@ -8,13 +8,11 @@ using UnityEngine.UI;
 public class SelectCardsUI : MonoBehaviour
 {
     [SerializeField] private Button nextButton; // Botão de avançar
-    [SerializeField] private TMP_Text energyText; // Texto para exibir a energia disponível
     [SerializeField] private PlayerDeckManager playerDeckManager;
 
     private Action onComplete;
     private ActionData actionData;
     [SerializeField] private CardUI cardUI;
-    private int availableEnergy;
     public TMP_Text instruction;
     public bool isSelectCardsActive = false;
 
@@ -29,13 +27,9 @@ public class SelectCardsUI : MonoBehaviour
         cardUI.ActivateSelectCard(true);
         actionData = data;
         onComplete = onCompleteCallback;
-
-        availableEnergy = actionData.PlayerStats.Mana;
-        UpdateEnergyText();
-
         gameObject.SetActive(true);
-
         nextButton.interactable = false;
+        nextButton.onClick.RemoveListener(CompleteStep);
         nextButton.onClick.AddListener(CompleteStep);
     }
 
@@ -89,18 +83,7 @@ public class SelectCardsUI : MonoBehaviour
         cardUI.ClearSelectedCards();
         gameObject.SetActive(false);
         cardUI.DisplayCardUI(false);
-        cardUI.UpdateSpentEnergyCounter();
         isSelectCardsActive = false;
         onComplete?.Invoke();
-    }
-
-    private void UpdateEnergyText()
-    {
-        energyText.text = $"Energy: {availableEnergy}";
-    }
-
-    private void UpdateSpentEnergyText()
-    {
-        energyText.text = $"Energy: {availableEnergy}";
     }
 }

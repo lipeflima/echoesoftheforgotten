@@ -17,14 +17,12 @@ public class CardUI : MonoBehaviour
     private GeneralUI generalUI;
     public bool isSelectCardsActive = false;
     private int maxSelectableCards = 2;
-    private TurnManager turnManager;
     [SerializeField] private int playerSpentEnergy = 0;
 
     public void Awake()
     {
         instance = this;
         generalUI = FindObjectOfType<GeneralUI>();
-        turnManager = FindObjectOfType<TurnManager>();
     }
 
     public void InitializeData(ActionData data)
@@ -47,8 +45,6 @@ public class CardUI : MonoBehaviour
             Destroy(cardObject);
         }
         cardObjects.Clear();
-        
-        playerSpentEnergy = 0;
     }
 
     public void AddCard(Card card)
@@ -101,8 +97,12 @@ public class CardUI : MonoBehaviour
     }
 
     public void UpdateSpentEnergyCounter()
-    {   
-        turnManager.SetCurrentSpentEnergy(playerSpentEnergy);
+    {
+        Debug.Log($"playerSpentEnergy: {playerSpentEnergy}");
+        Debug.Log($"PlayerTurnSpentEnergy: {actionData.PlayerTurnSpentEnergy}");
+        actionData.PlayerTurnSpentEnergy = playerSpentEnergy;
+        playerSpentEnergy = 0;
+        generalUI.SetCurrentSpentEnergyUI(playerSpentEnergy);
     }
 
     public void InitializeGeneralUI()

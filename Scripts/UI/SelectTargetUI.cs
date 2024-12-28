@@ -30,6 +30,7 @@ public class SelectTargetUI : MonoBehaviour
         gameObject.SetActive(true);
         onComplete = onCompleteCallback;
         nextButton.interactable = true; 
+        nextButton.onClick.RemoveListener(CompleteStep);
         nextButton.onClick.AddListener(CompleteStep);
     }
 

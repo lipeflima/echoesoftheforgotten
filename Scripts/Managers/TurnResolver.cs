@@ -9,11 +9,10 @@ using static ActionManager;
 /// </summary>
 public class TurnResolver : MonoBehaviour
 {
+    [SerializeField] private GeneralUI generalUI;
     private static System.Random random = new System.Random();
     public void ResolveTurn(ActionData actionData)
-    {
-        Debug.Log($"Resolvendo o Turno Attacker: {actionData.Attacker.Name} Defender: {actionData.Defender.Name}");   
-
+    {  
         // 1. Aplica mana
         ApplyManaEnergy(actionData);
         // 2. Aplica buffs e debuffs
@@ -39,15 +38,9 @@ public class TurnResolver : MonoBehaviour
     private void ApplyManaEnergy(ActionData actionData)
     {
         Debug.Log($"Resolvendo energia de Mana");
-        Debug.Log($"Player Mana: {actionData.PlayerTurnSpentEnergy}");
-        Debug.Log($"Enemy Mana: {actionData.EnemyTurnSpentEnergy}");
-
-        actionData.Attacker.SetMana(actionData.Attacker.IsPlayer ? -actionData.PlayerTurnSpentEnergy : -actionData.EnemyTurnSpentEnergy);
-        actionData.Defender.SetMana(actionData.Defender.IsPlayer ? -actionData.PlayerTurnSpentEnergy : -actionData.EnemyTurnSpentEnergy);
-        actionData.PlayerTurnSpentEnergy = 0;
-        actionData.EnemyTurnSpentEnergy = 0;
-        Debug.Log($"Player Mana: {actionData.PlayerTurnSpentEnergy}");
-        Debug.Log($"Enemy Mana: {actionData.EnemyTurnSpentEnergy}");
+        actionData.Attacker.SetMana(actionData.Attacker.IsPlayer ? actionData.Attacker.Mana - actionData.PlayerTurnSpentEnergy : actionData.Attacker.Mana - actionData.EnemyTurnSpentEnergy);
+        actionData.Defender.SetMana(actionData.Defender.IsPlayer ? actionData.Defender.Mana - actionData.PlayerTurnSpentEnergy : actionData.Defender.Mana - actionData.EnemyTurnSpentEnergy);
+        generalUI.SetPlayerCurrentAvailableEnergyUI(actionData.PlayerStats.Mana);
     }
 
     private int ProcessAttack(ActionData actionData)

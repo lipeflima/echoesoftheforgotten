@@ -12,7 +12,6 @@ public class  PlayerCombat : Battler
 
     public override void TakeAction(ActionData actionData)
     {
-        Debug.Log($"{Name} está iniciando as ações contra {actionData.Defender.Name}");
 
         actionManager = battlerGameobject.GetComponent<PlayerActionManager>();
         
@@ -27,8 +26,6 @@ public class  PlayerCombat : Battler
 
     public override void Defend(ActionData actionData)
     {
-        Debug.Log($"{Name} está se defendendo contra {actionData.Attacker.Name}.");
-
         actionManager = battlerGameobject.GetComponent<PlayerActionManager>();
         
         if (actionManager == null)
@@ -59,6 +56,6 @@ public class  PlayerCombat : Battler
 
     public override void SetMana(int amount)
     {
-        Mana+=amount;
+        Mana = amount;
     }
 }

@@ -18,6 +18,7 @@ public class SelectDefenseUI : MonoBehaviour
         onComplete = onCompleteCallback;
 
         nextButton.interactable = false; 
+        nextButton.onClick.RemoveListener(CompleteStep);
         nextButton.onClick.AddListener(CompleteStep);
 
         basicDefenseButton.onClick.AddListener(() => {

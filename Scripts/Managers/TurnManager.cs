@@ -95,7 +95,6 @@ public class TurnManager : MonoBehaviour {
                 enemyComponent.battler = enemy;
                 battlers.Add(enemy);
                 actionData.EnemiesStats.Add(enemy);
-                Debug.Log($"EnemiesStats {actionData.EnemiesStats}");
             }
         }
 
@@ -144,7 +143,6 @@ public class TurnManager : MonoBehaviour {
             }
 
             turnResolver.ResolveTurn(actionData);
-            SetCurrentSpentEnergy(0);
             NextTurn();
         }
     }
@@ -202,10 +200,5 @@ public class TurnManager : MonoBehaviour {
     public void SetPlayerActionCompleted()
     {
         IsPlayerActionCompleted = true;
-    }
-
-    public void SetCurrentSpentEnergy(int amount)
-    {
-        actionData.PlayerTurnSpentEnergy += amount;
     }
 }

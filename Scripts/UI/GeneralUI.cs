@@ -9,6 +9,7 @@ public class GeneralUI : MonoBehaviour
     [SerializeField] private TMP_Text currentActionState;
     [SerializeField] private TMP_Text currentAvailableEnergy;
     [SerializeField] private TMP_Text currentSpentEnergy;
+    [SerializeField] private int playerSpentEnergy = 0;
     private ActionData actionData;
 
     public void Initialize(ActionData data)
@@ -16,8 +17,7 @@ public class GeneralUI : MonoBehaviour
         actionData = data;
         InitializeEnemiesStatsUI();
         gameObject.SetActive(true);
-        SetPlayerCurrentAvailableEnergyUI();
-        SetCurrentSpentEnergyUI(actionData.PlayerTurnSpentEnergy);
+        SetPlayerCurrentAvailableEnergyUI(actionData.PlayerStats.Mana);
     }
 
     public void SetCurrentActionState(string state)
@@ -25,9 +25,9 @@ public class GeneralUI : MonoBehaviour
         currentActionState.text = state;
     }
 
-    public void SetPlayerCurrentAvailableEnergyUI()
+    public void SetPlayerCurrentAvailableEnergyUI(int energy)
     {
-        currentAvailableEnergy.text = $"Energy: {actionData.PlayerStats.Mana}";
+        currentAvailableEnergy.text = $"Energy: {energy}";
     }
 
     public void SetCurrentSpentEnergyUI(int amount)
