@@ -4,25 +4,25 @@ using UnityEngine;
 
 public abstract class Battler
 {
-    public string Name { get; protected set; }
-    public int Initiative { get; protected set; }
-    public bool IsPlayer { get; protected set; }
-    public int Health { get; protected set; }
-    public int Mana { get; protected set; }
-    public int Attack { get; protected set; }
-    public int Defense { get; protected set; }
-    public int Dexterity { get; protected set; }
-    public int Resistance { get; protected set; }
-    public int Mentality { get; protected set; }
-    public int Luck { get; protected set; }
-    public float CriticalDamage { get; protected set; }
-    public float CriticalChance { get; protected set; }
-    public float ArmourPenetration { get; protected set; }
-    public float Accuracy { get; protected set; }
-    public float Recovery { get; protected set; }
-    public float Absorsion { get; protected set; }
-    public bool HasActiveBuff { get; protected set; }
-    public bool HasActiveDebuff { get; protected set; }
+    public string Name { get; set; }
+    public int Initiative { get; set; }
+    public bool IsPlayer { get; set; }
+    public int Health { get; set; }
+    public int Mana { get; set; }
+    public int Attack { get; set; }
+    public int Defense { get; set; }
+    public int Dexterity { get; set; }
+    public int Resistance { get; set; }
+    public int Mentality { get; set; }
+    public int Luck { get; set; }
+    public float CriticalDamage { get; set; }
+    public float CriticalChance { get; set; }
+    public float ArmourPenetration { get; set; }
+    public float Accuracy { get; set; }
+    public float Recovery { get; set; }
+    public float Absorsion { get; set; }
+    public bool HasActiveBuff { get; set; }
+    public bool HasActiveDebuff { get; set; }
     public GameObject battlerGameobject { get; set; }
     public List<ActiveBuff> ActiveBuffs { get; private set; } = new List<ActiveBuff>();
 

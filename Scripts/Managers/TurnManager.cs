@@ -14,7 +14,10 @@ public class TurnManager : MonoBehaviour {
     private TurnResolver turnResolver;
     private ActionData actionData;
     private int turnCount = 0;
+    private int cycleMana = 10;
     private bool IsPlayerActionCompleted = false;
+    public bool IsCombatRunning = true;
+    public MenuMain menuMain; 
 
     void Start() 
     {
@@ -106,7 +109,7 @@ public class TurnManager : MonoBehaviour {
 
     private IEnumerator TurnCycle()
     {
-        while (turnCount <= 10)
+        while (IsCombatRunning)
         {
             currentAttacker = battlers[currentTurnIndex];
             if (!currentAttacker.IsPlayer)
@@ -145,6 +148,8 @@ public class TurnManager : MonoBehaviour {
             turnResolver.ResolveTurn(actionData);
             NextTurn();
         }
+
+        menuMain.GoToLevel("Acampamento");
     }
 
     private IEnumerator WaitForPlayerAction(string action)
@@ -173,6 +178,7 @@ public class TurnManager : MonoBehaviour {
     private void NextTurn()
     {
         turnCount++;
+        // AddCycleMana(currentAttacker, currentDefender);
         currentTurnIndex = (currentTurnIndex + 1) % battlers.Count;
     }
 
@@ -200,5 +206,11 @@ public class TurnManager : MonoBehaviour {
     public void SetPlayerActionCompleted()
     {
         IsPlayerActionCompleted = true;
+    }
+
+    private void AddCycleMana(Battler attacker, Battler defender)
+    {
+        attacker.Mana += cycleMana;
+        defender.Mana += cycleMana;
     }
 }

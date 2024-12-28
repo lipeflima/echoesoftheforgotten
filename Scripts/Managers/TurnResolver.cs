@@ -38,8 +38,8 @@ public class TurnResolver : MonoBehaviour
     private void ApplyManaEnergy(ActionData actionData)
     {
         Debug.Log($"Resolvendo energia de Mana");
-        actionData.Attacker.SetMana(actionData.Attacker.IsPlayer ? actionData.Attacker.Mana - actionData.PlayerTurnSpentEnergy : actionData.Attacker.Mana - actionData.EnemyTurnSpentEnergy);
-        actionData.Defender.SetMana(actionData.Defender.IsPlayer ? actionData.Defender.Mana - actionData.PlayerTurnSpentEnergy : actionData.Defender.Mana - actionData.EnemyTurnSpentEnergy);
+        actionData.Attacker.Mana = actionData.Attacker.IsPlayer ? actionData.Attacker.Mana - actionData.PlayerTurnSpentEnergy : actionData.Attacker.Mana - actionData.EnemyTurnSpentEnergy;
+        actionData.Defender.Mana = actionData.Defender.IsPlayer ? actionData.Defender.Mana - actionData.PlayerTurnSpentEnergy : actionData.Defender.Mana - actionData.EnemyTurnSpentEnergy;
         generalUI.SetPlayerCurrentAvailableEnergyUI(actionData.PlayerStats.Mana);
     }
 
