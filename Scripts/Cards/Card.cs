@@ -19,6 +19,7 @@ public class Card : ScriptableObject
 [System.Serializable]
 public class CardEffectData
 {
+    public string effectName;
     public string statName; // Nome da estatística (e.g., "Health", "Attack")
     public int value;       // Valor a alterar
     public CardType effectType;

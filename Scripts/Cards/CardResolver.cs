@@ -13,6 +13,6 @@ public class CardResolver
             return null;
         }
 
-        return (CardBehavior)Activator.CreateInstance(behaviorType);
+        return (CardBehavior)Activator.CreateInstance(behaviorType, cardData);
     }
 }

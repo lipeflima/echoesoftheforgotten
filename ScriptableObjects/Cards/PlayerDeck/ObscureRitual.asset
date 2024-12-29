@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a309d03f25e293648a4b231420dd2b8c, type: 3}
-  m_Name: SolarExplosion
+  m_Name: ObscureRitual
   m_EditorClassIdentifier: 
-  cardName: "Explos\xE3o solar"
-  description: "Uma explos\xE3o solar poderosa"
-  EnergyCost: 4
-  behaviorClassName: SolarExplosionBehavior
+  cardName: RItual Obscuro
+  description: Um ritual obscuro
+  EnergyCost: 6
+  behaviorClassName: ObscureRitualBehavior
   artwork: {fileID: 0}
   effects:
-  - statName: Health
-    value: 3
+  - effectName: Dano
+    statName: Health
+    value: -7
     effectType: 0
     duration: 0
   cardType: 0

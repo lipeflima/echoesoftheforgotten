@@ -14,13 +14,4 @@ public abstract class CardBehavior
     }
 
     public abstract void ExecuteAction(Card card, Battler target);
-
-    [System.Serializable]
-    public class StatEffect
-    {
-        public string statName; // Nome da estatística, como "Health", "Attack", etc.
-        public int value;       // Valor da alteração (positivo ou negativo).
-        public CardType effectType;
-        public int duration;
-    }
 }

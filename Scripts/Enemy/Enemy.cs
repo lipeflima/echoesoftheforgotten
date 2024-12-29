@@ -51,16 +51,17 @@ public class Enemy : Battler
 
     public override void ApplyDamage(int damage)
     {
-        statsUI = TurnManager.instance.statsUI;
         Health -= damage;
-        Debug.Log($"characterBar {characterBar}");
-        Debug.Log($"Health {Health}");
-        characterBar = battlerGameobject.GetComponent<CharacterBar>();
-        characterBar.UpdateUI(Health);
-        statsUI.CreateStatsUI(this);
+        // Feedback
         cardFeedbackManager = CardFeedbackManager.instance;
         cardFeedbackManager.SetCardBeforeInvoke("TakeDamage");
         cardFeedbackManager.OnCardActivation?.Invoke();
+        // CharacterBarUI
+        characterBar = battlerGameobject.GetComponent<CharacterBar>();
+        characterBar.UpdateUI(Health);
+        // StatsUI
+        statsUI = TurnManager.instance.statsUI;
+        statsUI.CreateStatsUI(this);
     }
 
     public override void SetMana(int amount)
@@ -70,19 +71,24 @@ public class Enemy : Battler
 
     public override void ApplyEffect(CardEffectData effect)
     {
-        // Aplica o buff imediatamente
+        Debug.Log($"Aplicando {effect.value} de efeito em {effect.statName}");
+        Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
+        // Aplica o buff
         ModifyStat(effect.statName, effect.value);
-
+        // StatsUI
+        statsUI = TurnManager.instance.statsUI;
+        statsUI.CreateStatsUI(this);
         // Adiciona o buff à lista de buffs ativos
         if (effect.effectType == Card.CardType.Buff || effect.effectType == Card.CardType.Debuff)
         {
+            Debug.Log($"Aplicando {effect.effectType} de {effect.value} de efeito em {effect.statName} com duração de {effect.duration} turnos");
             ActiveBuffs.Add(new ActiveBuff
             {
+                buffName = effect.effectName,
                 StatName = effect.statName,
                 Value = effect.value,
                 RemainingTurns = effect.duration // Duração em turnos
             });
         } 
-        
     }
 }

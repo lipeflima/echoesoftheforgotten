@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a309d03f25e293648a4b231420dd2b8c, type: 3}
-  m_Name: SubmersedChamber
+  m_Name: RootWall
   m_EditorClassIdentifier: 
-  cardName: "C\xE2mara submersa"
-  description: 'Uma bolha '
+  cardName: RootWall
+  description: RooWall
   EnergyCost: 3
-  behaviorClassName: SubmersedChamberBehavior
+  behaviorClassName: RootWallBehavior
   artwork: {fileID: 0}
   effects:
-  - statName: Mana
-    value: 1
-    effectType: 3
-    duration: 1
-  cardType: 3
+  - effectName: Defense
+    statName: Defense
+    value: 4
+    effectType: 1
+    duration: 0
+  cardType: 1

@@ -1,9 +1,8 @@
 using UnityEngine;
 
-public class FireFuryBehavior : CardBehavior
+public class SolarExplosionBehavior : CardBehavior
 {
-    public FireFuryBehavior() : base(null) { }
-    public FireFuryBehavior(Card cardData) : base(cardData){}
+    public SolarExplosionBehavior() : base(null) {}
 
     public override void ExecuteAction(Card cardData, Battler target)
     {

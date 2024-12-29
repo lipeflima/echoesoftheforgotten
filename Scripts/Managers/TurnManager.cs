@@ -20,6 +20,7 @@ public class TurnManager : MonoBehaviour {
     public bool IsCombatRunning = true;
     public MenuMain menuMain; 
     public StatsUI statsUI;
+    [SerializeField] private GeneralUI generalUI;
 
     void Awake()
     {
@@ -196,6 +197,9 @@ public class TurnManager : MonoBehaviour {
 
     private void NextTurn()
     {
+        actionData.Attacker.ModifyStat("Mana", 2);
+        actionData.Defender.ModifyStat("Mana", 2);
+        generalUI.SetPlayerCurrentAvailableEnergyUI(actionData.PlayerStats.Mana);
         turnCount++;
         // AddCycleMana(currentAttacker, currentDefender);
         currentTurnIndex = (currentTurnIndex + 1) % battlers.Count;
@@ -207,8 +211,8 @@ public class TurnManager : MonoBehaviour {
 
         if (targetManager != null)
         {
-            List<GameObject> battlerObjects = battlers.Select(b => b.battlerGameobject).ToList();
-            targetManager.InitializeTargets(battlers, battlerObjects, actionData);
+            List<GameObject> battlerObjects = battlers.FindAll(battler => !battler.IsPlayer).Select(b => b.battlerGameobject).ToList();
+            targetManager.InitializeTargets(battlers.FindAll(battler => !battler.IsPlayer), battlerObjects, actionData);
         }
     }
 
