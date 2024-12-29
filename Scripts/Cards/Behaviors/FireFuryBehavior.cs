@@ -9,7 +9,7 @@ public class FireFuryBehavior : CardBehavior
         cardFeedbackManager = CardFeedbackManager.instance;
     }
 
-    public override void ExecuteAction(Card cardData, Battler attacker, Battler defender)
+    public override void ExecuteAction(Card cardData, Battler target)
     {
         Debug.Log($"Executando ação! {cardData.cardName}");
         cardFeedbackManager.SetCardBeforeInvoke(cardData.cardName);
@@ -17,7 +17,7 @@ public class FireFuryBehavior : CardBehavior
 
         foreach (var effect in cardData.effects)
         {
-            defender.ApplyEffect(effect);
+            target.ApplyEffect(effect);
         }
     }
 }
