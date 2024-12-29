@@ -10,39 +10,31 @@ using static ActionManager;
 /// </summary>
 public class TurnResolver : MonoBehaviour
 {
+    private CardFeedbackManager cardFeedbackManager;
     [SerializeField] private GeneralUI generalUI;
     private static System.Random random = new System.Random();
+
+    public void Start()
+    {
+        cardFeedbackManager = CardFeedbackManager.instance;
+    }
+
     public void ResolveTurn(ActionData actionData)
     {  
         // 1. Aplica mana
         ApplyManaEnergy(actionData);
-        // 2. Aplica buffs e debuffs
-        ApplyBuffsAndDebuffs(actionData);
+        // 2. Aplica os efeitos das cartas
+        ApplyCardEffects(actionData);
         
         // 3. Processa o ataque
-        int damage = ProcessAttack(actionData);
-        int avoidedDamage = ProcessDefense(actionData);
+        int damage = ProcessBasicAttack(actionData);
+        int avoidedDamage = ProcessBasicDefense(actionData);
 
         Debug.Log($"Turn damage: {damage}");
         Debug.Log($"Turn avoided Damage: {avoidedDamage}");
 
-        if (actionData.CardData.AttackerSelectedCards.Count  > 0)
-        {
-            foreach(Card attackCard in actionData.CardData.AttackerSelectedCards)
-            {
-                ApplyCardEffects(attackCard, actionData.Attacker, actionData.Defender);
-            }
-        }
-        if (actionData.CardData.DefenderSelectedCards.Count > 0)
-        {
-            foreach(Card defenseCard in actionData.CardData.DefenderSelectedCards)
-            {
-                ApplyCardEffects(defenseCard, actionData.Attacker, actionData.Defender);
-            }
-        }
-
         bool hasCounterAttack = IsCounterAttackSuccessful(actionData.Defender.Dexterity, actionData.Attacker.Dexterity) && actionData.CombatAction.DefenderAction.DefenseType == DefenseType.CounterAttack;
-
+        bool hasEvaded = IsEvadeSuccessful(actionData.Defender.Dexterity, actionData.Defender.Accuracy, actionData.Attacker.Dexterity);
         // 4. Aplica o resultado ao defensor ou Aplica efeitos de contra-ataque no atacante, se houver.
         if (!hasCounterAttack) {
             actionData.Defender.ApplyDamage(damage - avoidedDamage);
@@ -51,44 +43,86 @@ public class TurnResolver : MonoBehaviour
         }
     }
 
-    private void ApplyCardEffects(Card card, Battler attacker, Battler defender)
+    private void ApplyCardEffects(ActionData actionData)
     {
-        // CardResolver.Resolve(card).ExecuteAction(attacker, defender);
+        if (actionData.CardData.AttackerSelectedCards.Count  > 0)
+        {
+            foreach(Card attackCard in actionData.CardData.AttackerSelectedCards)
+            {
+                CardBehavior behavior = CardResolver.Resolve(attackCard);
+                switch (attackCard.cardType)
+                {
+                    case Card.CardType.Buff:
+                        behavior.ExecuteAction(attackCard, actionData.Attacker);
+                        break;
+                    case Card.CardType.Debuff:
+                        behavior.ExecuteAction(attackCard, actionData.Defender);
+                        break;
+                    case Card.CardType.Attack:
+                        behavior.ExecuteAction(attackCard, actionData.Defender);
+                        break;
+                    default:
+                        Debug.LogError("Tipo da carta não existe e não pode executar efeito!");
+                        break;
+                }
+            }
+        }
+        
+        if (actionData.CardData.DefenderSelectedCards.Count > 0)
+        {
+            foreach(Card defenseCard in actionData.CardData.DefenderSelectedCards)
+            {
+                CardBehavior behavior = CardResolver.Resolve(defenseCard);
+                switch (defenseCard.cardType)
+                {
+                    case Card.CardType.Buff:
+                        behavior.ExecuteAction(defenseCard, actionData.Defender);
+                        break;
+                    case Card.CardType.Debuff:
+                        behavior.ExecuteAction(defenseCard, actionData.Attacker);
+                        break;
+                    case Card.CardType.Defense:
+                        behavior.ExecuteAction(defenseCard, actionData.Defender);
+                        break;
+                    default:
+                        Debug.LogError("Tipo da carta não existe e não pode executar efeito!");
+                        break;
+                }
+            }
+        }
     }
-
 
     private void ApplyManaEnergy(ActionData actionData)
     {
-        Debug.Log($"Resolvendo energia de Mana");
         actionData.Attacker.Mana = actionData.Attacker.IsPlayer ? actionData.Attacker.Mana - actionData.PlayerTurnSpentEnergy : actionData.Attacker.Mana - actionData.EnemyTurnSpentEnergy;
         actionData.Defender.Mana = actionData.Defender.IsPlayer ? actionData.Defender.Mana - actionData.PlayerTurnSpentEnergy : actionData.Defender.Mana - actionData.EnemyTurnSpentEnergy;
         generalUI.SetPlayerCurrentAvailableEnergyUI(actionData.PlayerStats.Mana);
     }
 
-    private int ProcessAttack(ActionData actionData)
+    private int ProcessBasicAttack(ActionData actionData)
     {
         switch (actionData.CombatAction.AttackerAction.AttackType)
         {
             case AttackType.Basic:
                 return Math.Max(0, (int)(actionData.Attacker.Attack * actionData.Attacker.Accuracy));
             case AttackType.CardAttack:
-                return CalculateSpecialAttackDamage(actionData.CombatAction.AttackerAction.CardEffects.FindAll(effect => effect.statName == "Health" && effect.effectType == Card.CardType.Attack));
+                return 0;
             case AttackType.FakeAttack:
-                return 0; // Fake attack does no damage
+                return 0;
             default:
                 break;
         }
         return 0;
     }
 
-    private int ProcessDefense(ActionData actionData)
+    private int ProcessBasicDefense(ActionData actionData)
     {
         switch (actionData.CombatAction.DefenderAction.DefenseType)
         {
             case DefenseType.Basic:
                 return Math.Max(0, (int)(actionData.Defender.Defense * actionData.Defender.ArmourPenetration));
             case DefenseType.CardDefense:
-                return CalculateSpecialDefense(actionData.CombatAction.DefenderAction.CardEffects.FindAll(effect => effect.statName == "Health" && effect.effectType == Card.CardType.Attack));
+                return 0;
             case DefenseType.CounterAttack:
                 return CalculatedCounterAttackDamage(actionData.Defender.Dexterity, actionData.Attacker.Dexterity, actionData.Attacker.Attack);
             case DefenseType.Evade:
@@ -99,43 +133,7 @@ public class TurnResolver : MonoBehaviour
         return 0;
     }
 
-    private void ApplyBuffsAndDebuffs(ActionData actionData)
-    {
-        List<CardEffectData> effects = actionData.CombatAction.AttackerAction.CardEffects;
-        Battler attacker = actionData.Attacker;
-        Battler defender = actionData.Defender;
-        CurrentTurnAction turnAction = actionData.CurrentTurnAction;
-
-        foreach(var effect in effects)
-        {
-            switch (effect.effectType)
-            {
-                // Buff e Debuff é automaticamente aplicado no battler que usou a carta
-                case Card.CardType.Buff:
-                    ApplyBuff(effect, turnAction == CurrentTurnAction.Attack ? attacker : defender);
-                    break;
-                case Card.CardType.Debuff:
-                    ApplyBuff(effect, turnAction == CurrentTurnAction.Attack ? defender : attacker);
-                    break;
-            }
-        }
-    }
-
-    public void ApplyBuff(CardEffectData effect, Battler target)
-    {
-        // Aplica o buff imediatamente
-        target.ModifyStat(effect.statName, effect.value);
-
-        // Adiciona o buff à lista de buffs ativos
-        target.ActiveBuffs.Add(new ActiveBuff
-        {
-            StatName = effect.statName,
-            Value = effect.value,
-            RemainingTurns = effect.duration // Duração em turnos
-        });
-    }
-
-    public static bool IsCounterAttackSuccessful(int defenderDexterity, int attackerDexterity)
+    public bool IsCounterAttackSuccessful(int defenderDexterity, int attackerDexterity)
     {
         // Base difficulty threshold
         int baseThreshold = 10;
@@ -170,24 +168,23 @@ public class TurnResolver : MonoBehaviour
         return Mathf.Max(counterAttackDamage, 1);
     }
 
-    private int CalculateSpecialAttackDamage(List<CardEffectData> effects)
+    public bool IsEvadeSuccessful(int defenderDexterity, float defenderAccuracy, int attackerDexterity)
     {
-        var damageSome = 0;
-        foreach(var effect in effects)
-        {
-            damageSome+=effect.value;
-        }
-        return damageSome;
-    }
+        int baseThreshold = 10;
+        // Ajustar o limiar com base na diferença de estatísticas, afetado pela Accuracy do defensor
+        float adjustedThreshold = baseThreshold + ((attackerDexterity * (1 - defenderAccuracy)) - defenderDexterity);
 
-    private int CalculateSpecialDefense(List<CardEffectData> effects)
-    {
-        var defenseSome = 0;
-        foreach(var effect in effects)
-        {
-            defenseSome+=effect.value;
-        }
-        return defenseSome;
+        // Calcular o bônus do defensor
+        int defenderBonus = defenderDexterity;
+
+        // Gerar um lançamento de dado de 1 a 20
+        int roll = random.Next(1, 21);
+
+        // Calcular o resultado final do defensor
+        float defenderResult = roll + defenderBonus;
+
+        // Retornar verdadeiro se o resultado for maior ou igual ao limiar ajustado
+        return defenderResult >= adjustedThreshold;
     }
 
     public class DebugLogger

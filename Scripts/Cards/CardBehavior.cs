@@ -3,30 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Card;
 
-public class CardBehavior : MonoBehaviour
+public abstract class CardBehavior
 {
-    public Card cardData;
-    public void ExecuteAction(CardType cardType, Battler attacker, Battler defender)
+    protected CardFeedbackManager cardFeedbackManager; // Pode ser acessado pelas subclasses
+    public Card cardData { get; private set; }
+
+    public CardBehavior(Card cardData)
     {
-        foreach (var effect in cardData.effects)
-        {
-            if (cardType == CardType.Buff)
-            {
-                Battler target = attacker;
-                switch (effect.statName)
-                {
-                    case "Health":
-                        target.ModifyStat(effect.statName, effect.value);
-                        break;
-                    case "Attack":
-                        // target.ModifyAttack(effect.value);
-                        break;
-                    // Adicione mais casos para outras estatísticas
-                }
-            }
-            
-        }
+        this.cardData = cardData;
     }
+
+    public abstract void ExecuteAction(Card card, Battler target);
 
     [System.Serializable]
     public class StatEffect

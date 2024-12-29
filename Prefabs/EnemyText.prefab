@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 5105812050950471435}
   - component: {fileID: 171158750577213658}
   - component: {fileID: 1005600959932161516}
+  - component: {fileID: 6962497485741617971}
   m_Layer: 0
   m_Name: EnemyText
   m_TagString: Untagged
@@ -236,3 +237,16 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &6962497485741617971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6274677164515486328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb3181cac3dea0944bdc0b3f7bb26fb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCamera: {fileID: 0}

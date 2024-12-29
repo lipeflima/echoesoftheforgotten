@@ -51,14 +51,9 @@ public abstract class Battler
     public abstract void TakeAction(ActionData actionData);
     public abstract void Defend(ActionData actionData);
     
-    public void ApplyDamage(int damage)
-    {
-        Health -= damage;
-        battlerGameobject.GetComponent<CharacterBar>().UpdateUI(Health);
-    }
-
-    // Método para aplicar alterações diretas
+    public abstract void ApplyDamage(int damage);
     public abstract void ModifyStat(string statName, float value);
     public abstract void SetMana(int amount);
+    public abstract void ApplyEffect(CardEffectData effect);
 }
 

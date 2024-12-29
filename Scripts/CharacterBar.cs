@@ -10,7 +10,7 @@ public class CharacterBar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        UpdateUI(gameObject.GetComponent<CharacterStats>().Health);
     }
 
     // Update is called once per frame
