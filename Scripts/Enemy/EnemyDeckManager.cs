@@ -31,10 +31,5 @@ public class EnemyDeckManager : MonoBehaviour
             hand.Add(newCard);
         } */
     }
-
-    public void PlayCard(Card selectedCard, Battler target)
-    {
-        enemyDeck.UseCard(selectedCard, target);
-    }
 }
 

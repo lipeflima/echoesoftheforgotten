@@ -6,6 +6,7 @@ using UnityEditor.EditorTools;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour {
+    public static TurnManager instance;
     public List<Battler> battlers = new List<Battler>();
     private int currentTurnIndex = 0;
     public Battler currentDefender { get; set; }
@@ -19,6 +20,11 @@ public class TurnManager : MonoBehaviour {
     public bool IsCombatRunning = true;
     public MenuMain menuMain; 
     public StatsUI statsUI;
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Start() 
     {
@@ -151,10 +157,10 @@ public class TurnManager : MonoBehaviour {
             }
 
             turnResolver.ResolveTurn(actionData);
+            bool battleContinues = CheckIfBattleContinues(battlers);
+            if (!battleContinues) menuMain.LoadLevel();
             NextTurn();
         }
-
-        menuMain.GoToLevel("Acampamento");
     }
 
     private IEnumerator WaitForPlayerAction(string action)
@@ -178,6 +184,14 @@ public class TurnManager : MonoBehaviour {
     {
         yield return new WaitUntil(() => IsPlayerActionCompleted);
         currentDefender.Defend(actionData);
+    }
+
+    public bool CheckIfBattleContinues(List<Battler> battlers)
+    {
+        bool isPlayerAlive = battlers.Any(battler => battler.IsPlayer && battler.Health > 0);
+        bool isEnemyAlive = battlers.Any(battler => !battler.IsPlayer && battler.Health > 0);
+
+        return isPlayerAlive && isEnemyAlive;
     }
 
     private void NextTurn()

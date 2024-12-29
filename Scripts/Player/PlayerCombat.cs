@@ -5,10 +5,18 @@ using UnityEngine;
 public class  PlayerCombat : Battler
 {
     public PlayerActionManager actionManager;
+    private CardFeedbackManager cardFeedbackManager;
+    private CharacterBar characterBar;
+    private StatsUI statsUI;
     public PlayerCombat(string Name, int Initiative, bool IsPlayer, int Health, int Mana, int Attack, int Defense, int Dexterity, 
                     int Resistance, int Mentality, int Luck, float CriticalDamage, float CriticalChance, float ArmourPenetration, float Recovery, float Absorsion, float Accuracy)
         : base(Name, Initiative, true, Health, Mana, Attack, Defense, Dexterity, Resistance, Mentality, Luck, CriticalDamage, 
             CriticalChance, ArmourPenetration, Recovery, Absorsion, Accuracy) { }
+
+    public void Start()
+    {
+        
+    }
 
     public override void TakeAction(ActionData actionData)
     {
@@ -54,8 +62,38 @@ public class  PlayerCombat : Battler
         }
     }
 
+    public override void ApplyDamage(int damage)
+    {
+        cardFeedbackManager = CardFeedbackManager.instance;
+        characterBar = battlerGameobject.GetComponent<CharacterBar>();
+        statsUI = TurnManager.instance.statsUI;
+        Health -= damage;
+        characterBar.UpdateUI(Health);
+        statsUI.CreateStatsUI(this);
+        cardFeedbackManager.SetCardBeforeInvoke("TakeDamage");
+        cardFeedbackManager.OnCardActivation?.Invoke();
+    }
+
     public override void SetMana(int amount)
     {
         Mana = amount;
+    }
+
+    public override void ApplyEffect(CardEffectData effect)
+    {
+        // Aplica o buff imediatamente
+        ModifyStat(effect.statName, effect.value);
+
+        // Adiciona o buff à lista de buffs ativos
+        if (effect.effectType == Card.CardType.Buff || effect.effectType == Card.CardType.Debuff)
+        {
+            ActiveBuffs.Add(new ActiveBuff
+            {
+                StatName = effect.statName,
+                Value = effect.value,
+                RemainingTurns = effect.duration // Duração em turnos
+            });
+        } 
+        
     }
 }

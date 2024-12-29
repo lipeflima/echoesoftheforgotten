@@ -68,20 +68,4 @@ public class Deck
 
     // Verificar se o deck está vazio
     public bool IsEmpty => cards.Count == 0;
-
-    public void UseCard(Card selectedCard, Battler target)
-    {
-        // Resolve o comportamento da carta
-        CardBehavior behavior = CardResolver.Resolve(selectedCard);
-
-        if (behavior != null)
-        {
-            // Executa a ação da carta
-            behavior.ExecuteAction(target);
-        }
-        else
-        {
-            Debug.LogError("Não foi possível executar a ação da carta.");
-        }
-    }
 }
