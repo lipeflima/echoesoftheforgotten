@@ -6,7 +6,6 @@ public class RegenerateHealth : IStrategy
 {
     public Card Execute(EnemyContext context)
     {
-        Debug.Log($"Analisando RegenerateHealth Strategy");
         if (context.defenderStats.Health >= 20)
         {
             return context.cardsInHand

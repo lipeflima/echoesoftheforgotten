@@ -78,13 +78,11 @@ public class EnemyDefenseAction : MonoBehaviour
         }
 
         context.HasStrategyApplied = strategyApplied;
-        data.CombatAction.DefenderAction.DefenseStrategy = DetermineDefenseStrategy(context);
-        Debug.Log($"Defense strategy: {data.CombatAction.DefenderAction.DefenseStrategy}");
+        data.CombatAction.DefenderAction.DefenseType = DetermineDefenseStrategy(context);
     }
 
     private void SelectCard(Card card, EnemyContext context)
     {
-        Debug.Log($"Inimigo selecionou uma carta: {card.cardName}");
         context.cardsInHand.Remove(card);
         context.selectedCards.Add(card);
     }
@@ -96,23 +94,41 @@ public class EnemyDefenseAction : MonoBehaviour
         {
             attackerStats = data.Attacker,
             defenderStats = data.Defender,
-            cardsInHand = data.CardData.AttackerSelectedCards,
-            availableEnergy = GetAvailableEnergy(), // Exemplo
+            cardsInHand = data.CardData.DefenderSelectedCards,
+            availableEnergy = data.Defender.Mana, // Exemplo
             attackerData = data.CombatAction.AttackerAction,
             selectedCards = new(),
-            attackerDexterity = data.CombatAction.AttackerAction.Dexterity,
-            defenderDexterity = data.CombatAction.DefenderAction.Dexterity,
         };
     }
 
-    private DefenseStrategy DetermineDefenseStrategy(EnemyContext context)
+    private DefenseType DetermineDefenseStrategy(EnemyContext context)
     {
-        if (!context.HasStrategyApplied) return DefenseStrategy.Evade;
-        if (HasDefenseCard(context)) return DefenseStrategy.CardDefense;
-        if (HasHealthCard(context)) return DefenseStrategy.Basic;
-        if (HasDexterityCard(context)) return DefenseStrategy.CounterAttack;
-        if (HasBuffOrDebuffCard(context)) return DefenseStrategy.Basic;
-        return DefenseStrategy.Evade;
+        if (!context.HasStrategyApplied)
+        {
+            Debug.Log("Nenhuma estrategia aplicada");
+            return DefenseType.Basic;
+        }
+        if (HasDefenseCard(context)) {
+            Debug.Log("Aplicando estrategia de BlockStrongAttack");
+            return DefenseType.CardDefense;
+        }
+        if (HasHealthCard(context))
+        {
+            Debug.Log("Aplicando estrategia de RegenerateHealth");
+            return DefenseType.Basic;
+        }
+        if (HasDexterityCard(context))
+        {
+            Debug.Log("Aplicando estrategia de CounterLowCOstAttack");
+            return DefenseType.CounterAttack;
+        }
+        if (HasBuffOrDebuffCard(context))
+        {
+            Debug.Log("Aplicando estrategia de BestBuff");
+            return DefenseType.Basic;
+        }
+        Debug.Log("Aplicando estrategia de evade");
+        return DefenseType.Evade;
     }
 
     private bool HasDefenseCard(EnemyContext context) =>
@@ -127,9 +143,4 @@ public class EnemyDefenseAction : MonoBehaviour
     private bool HasBuffOrDebuffCard(EnemyContext context) =>
         context.selectedCards.Any(card => card.effects.Any(effect =>
             effect.effectType == Card.CardType.Buff || effect.effectType == Card.CardType.Debuff));
-
-    private int GetAvailableEnergy()
-    {
-        return turnManager.GetAvailableEnergy();
-    }
 }

@@ -6,20 +6,25 @@ using static Card;
 public class CardBehavior : MonoBehaviour
 {
     public Card cardData;
-    public void ExecuteAction(Battler target)
+    public void ExecuteAction(CardType cardType, Battler attacker, Battler defender)
     {
         foreach (var effect in cardData.effects)
         {
-            switch (effect.statName)
+            if (cardType == CardType.Buff)
             {
-                case "Health":
-                    // target.ModifyHealth(effect.value);
-                    break;
-                case "Attack":
-                    // target.ModifyAttack(effect.value);
-                    break;
-                // Adicione mais casos para outras estatísticas
+                Battler target = attacker;
+                switch (effect.statName)
+                {
+                    case "Health":
+                        target.ModifyStat(effect.statName, effect.value);
+                        break;
+                    case "Attack":
+                        // target.ModifyAttack(effect.value);
+                        break;
+                    // Adicione mais casos para outras estatísticas
+                }
             }
+            
         }
     }
 

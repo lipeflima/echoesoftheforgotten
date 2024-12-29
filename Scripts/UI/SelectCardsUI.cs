@@ -8,19 +8,18 @@ using UnityEngine.UI;
 public class SelectCardsUI : MonoBehaviour
 {
     [SerializeField] private Button nextButton; // Botão de avançar
-    [SerializeField] private TMP_Text energyText; // Texto para exibir a energia disponível
+    [SerializeField] private PlayerDeckManager playerDeckManager;
 
     private Action onComplete;
     private ActionData actionData;
     [SerializeField] private CardUI cardUI;
-    private int availableEnergy;
     public TMP_Text instruction;
     public bool isSelectCardsActive = false;
 
     private void Update()
     {
         UpdateInstructionState();
-        UpdateNextButtonState();
+        // UpdateNextButtonState();
     }
 
     public void Initialize(ActionData data, Action onCompleteCallback)
@@ -28,13 +27,9 @@ public class SelectCardsUI : MonoBehaviour
         cardUI.ActivateSelectCard(true);
         actionData = data;
         onComplete = onCompleteCallback;
-
-        availableEnergy = actionData.PlayerStats.Mana;
-        UpdateEnergyText();
-
         gameObject.SetActive(true);
-
-        nextButton.interactable = false;
+        nextButton.interactable = true;
+        nextButton.onClick.RemoveListener(CompleteStep);
         nextButton.onClick.AddListener(CompleteStep);
     }
 
@@ -55,13 +50,18 @@ public class SelectCardsUI : MonoBehaviour
 
     private void CompleteStep()
     {
-        foreach(var selectedCard in cardUI.GetSelectedCards())
+        List<Card> cardsToRemove = cardUI.GetSelectedCards();
+        List<Card> cardsFromClones = new();
+        
+        bool isAttack = actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack;
+        
+        foreach(var selectedCard in cardsToRemove)
         {
-            cardUI.HighlightCard(selectedCard, false);
-
+            cardUI.HighlightCard(selectedCard, false); 
+             
             foreach(var effect in selectedCard.effects)
             {
-                if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
+                if (isAttack)
                 {
                     actionData.CombatAction.AttackerAction.CardEffects.Add(effect); 
                 } else {
@@ -69,30 +69,49 @@ public class SelectCardsUI : MonoBehaviour
                 }
             }
 
-            if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
-            {
-                actionData.CombatAction.AttackerAction.EnergyCost += selectedCard.EnergyCost;
-            } else {
-                actionData.CombatAction.DefenderAction.EnergyCost += selectedCard.EnergyCost;
-            }
+            GetCardsFromClones(selectedCard, cardsFromClones);
         }
 
-        if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
+        if (isAttack)
         {
-            actionData.CardData.AttackerSelectedCards = cardUI.GetSelectedCards();
+            playerDeckManager.DiscardFromAttackHand(cardsFromClones);
+            actionData.CardData.AttackerSelectedCards = cardsFromClones;
         } else {
-            actionData.CardData.DefenderSelectedCards = cardUI.GetSelectedCards();
+            playerDeckManager.DiscardFromDefenseHand(cardsFromClones);
+            actionData.CardData.DefenderSelectedCards = cardsFromClones;
         }
 
         cardUI.ClearSelectedCards();
+        cardUI.ActivateSelectCard(false);
         gameObject.SetActive(false);
         cardUI.DisplayCardUI(false);
         isSelectCardsActive = false;
         onComplete?.Invoke();
     }
 
-    private void UpdateEnergyText()
+    private void GetCardsFromClones(Card selectedCard, List<Card> cardsFromClones)
     {
-        energyText.text = $"Energy: {availableEnergy}";
+        bool isAttack = actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack;
+
+        if (isAttack)
+        {
+            foreach (Card card in playerDeckManager.GetAttackHand())
+            {
+                if (selectedCard.cardName == card.cardName)
+                {
+                    cardsFromClones.Add(card);
+                    break;
+                }
+            }
+        } else {
+            foreach (Card card in playerDeckManager.GetDefenseHand())
+            {
+                if (selectedCard.cardName == card.cardName)
+                {
+                    cardsFromClones.Add(card);
+                    break;
+                }
+            }
+        }
     }
 }

@@ -10,7 +10,6 @@ public class CounterLowCostAttacks : IStrategy
     private static System.Random random = new System.Random();
     public Card Execute(EnemyContext context)
     {
-        Debug.Log($"Analisando CounterLowCost Strategy");
         if (context.attackerData.EnergyCost <= attackerLowManaCostBase && context.availableEnergy >= moderateAvailableEnergyBase)
         {
             return context.cardsInHand
@@ -41,8 +40,8 @@ public class CounterLowCostAttacks : IStrategy
                     // 21 dano critico
 
                     // Ajusta a probabilidade para favorecer o contra-ataque
-                    int adjustedThreshold = 10 + (context.attackerDexterity - (context.defenderDexterity + totalEffect));
-                    int defenderRoll = roll + context.defenderDexterity + totalEffect;
+                    int adjustedThreshold = 10 + (context.attackerStats.Dexterity - (context.defenderStats.Dexterity + totalEffect));
+                    int defenderRoll = roll + context.defenderStats.Dexterity + totalEffect;
                     return defenderRoll - adjustedThreshold; // Diferencial positivo favorece o defensor.
                 })
                 .FirstOrDefault();

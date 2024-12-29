@@ -15,17 +15,18 @@ public class ManageHandUI : MonoBehaviour
     [SerializeField] private RawImage deckIndicator;
     private Action onComplete;
     private ActionData actionData;
-    public int maxResetHandCount = 2;
-    public int maxShuffleCount = 3;
-    public int maxShuffleCountPerTurn, maxPickCardCountPerTurn = 1;
-    public int resetHandCount, pickCardCount, shuffleCount, totalShuffleCount = 0;
+    [SerializeField] public int maxResetHandCount = 2;
+    [SerializeField] public int maxShuffleCount = 3;
+    [SerializeField] public int maxShuffleCountPerTurn, maxPickCardCountPerTurn = 2;
+    [SerializeField] public int resetHandCount, pickCardCount, shuffleCount, totalShuffleCount = 0;
+    [SerializeField] public int handCount = 0;
 
     private void Update()
     {
-        int handCount = actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack ? playerDeckManager.GetAttackHand().Count : playerDeckManager.GetDefenseHand().Count;
+        handCount = actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack ? playerDeckManager.GetAttackHand().Count : playerDeckManager.GetDefenseHand().Count;
 
         resetHandButton.interactable = resetHandCount < maxResetHandCount;
-        shuffleButton.interactable = shuffleCount < maxShuffleCount && shuffleCount < maxShuffleCountPerTurn;
+        shuffleButton.interactable = totalShuffleCount < maxShuffleCount && shuffleCount < maxShuffleCountPerTurn;
         pickCardButton.interactable = pickCardCount < maxPickCardCountPerTurn && handCount < playerDeckManager.GetMaxHandSize();
     }
 
@@ -36,7 +37,6 @@ public class ManageHandUI : MonoBehaviour
         actionData = data;
         gameObject.SetActive(true);
         onComplete = onCompleteCallback;
-        cardUI.ActivateSelectCard(true);
         nextButton.interactable = true; 
         nextButton.onClick.AddListener(CompleteStep);
 
@@ -45,15 +45,14 @@ public class ManageHandUI : MonoBehaviour
             cardObject.GetComponent<CardInteraction>().SetClickable(true);
         }
 
-        resetHandButton.onClick.AddListener(() => {
-            OnResetHand();
-        });
-        shuffleButton.onClick.AddListener(() => {
-            OnShuffle();
-        });
-        pickCardButton.onClick.AddListener(() => {
-            OnPickCard();
-        });
+        resetHandButton.onClick.RemoveListener(OnResetHand);
+        resetHandButton.onClick.AddListener(OnResetHand);
+
+        shuffleButton.onClick.RemoveListener(OnShuffle);
+        shuffleButton.onClick.AddListener(OnShuffle);
+
+        pickCardButton.onClick.RemoveListener(OnPickCard);
+        pickCardButton.onClick.AddListener(OnPickCard);
     }
 
     private void CompleteStep()
@@ -64,7 +63,6 @@ public class ManageHandUI : MonoBehaviour
 
     private void OnResetHand()
     {
-        Debug.Log("Reset Hand");
         _ = new List<Card>();
         var maxHandSize = playerDeckManager.GetMaxHandSize();
         cardUI.ClearHand();
@@ -72,7 +70,6 @@ public class ManageHandUI : MonoBehaviour
         List<Card> newHand;
         if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
         {
-            Debug.Log("Resetando hand de ataque");
             discardHand = playerDeckManager.GetAttackHand();
             playerDeckManager.DiscardFromAttackHand(discardHand);
             playerDeckManager.DrawToAttackHand(maxHandSize);
@@ -80,10 +77,9 @@ public class ManageHandUI : MonoBehaviour
         }
         else
         {
-            Debug.Log("Resetando hand de defesa");
             discardHand = playerDeckManager.GetDefenseHand();
             playerDeckManager.DiscardFromDefenseHand(discardHand);
-            // playerDeckManager.DrawToDefenseHand(maxHandSize);
+            playerDeckManager.DrawToDefenseHand(maxHandSize);
             newHand = playerDeckManager.GetDefenseHand();
         }
 
@@ -94,7 +90,6 @@ public class ManageHandUI : MonoBehaviour
 
     private void OnShuffle()
     {
-        Debug.Log("Shuffle Deck");
         if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
         {
             playerDeckManager.ShuffleAttackDeck();
@@ -109,7 +104,6 @@ public class ManageHandUI : MonoBehaviour
 
     private void OnPickCard()
     {
-        Debug.Log("Pick Card");
         Card newcard = new();
         if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
         {

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: RItual Obscuro
   description: Um ritual obscuro
-  manaCost: 4
+  EnergyCost: 6
   behaviorClassName: ObscureRItualBehavior
   artwork: {fileID: 0}
   effects:

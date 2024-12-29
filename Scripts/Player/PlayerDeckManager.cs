@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class PlayerDeckManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class PlayerDeckManager : MonoBehaviour
     [SerializeField] private List<Card> defenseHand = new List<Card>();
     private int maxHandSize = 4;
     private int minimumDeckSize = 20;
+    [SerializeField] private List<Card> discardPile = new();
     [SerializeField] private SharedCardPool cardPool;
 
     public void Awake()
@@ -156,8 +158,8 @@ public class PlayerDeckManager : MonoBehaviour
         defenseDeck = new Deck(defenseCards);
 
         // Inicializar as mãos
-        DrawHand(attackDeck, attackHand);
-        DrawHand(defenseDeck, defenseHand);
+        DrawToAttackHand(4);
+        DrawToDefenseHand(4);
     }
 }
 

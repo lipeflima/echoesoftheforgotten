@@ -4,75 +4,45 @@ using UnityEngine;
 using System.Reflection;
 using System;
 
-public class DebugLogger
-{
-    public static void LogProperties(object obj, int level = 0, int maxDepth = 3)
-    {
-        if (obj == null)
-        {
-            Debug.Log($"{new string(' ', level * 2)}Object is null");
-            return;
-        }
-
-        // Obter o tipo do objeto
-        var type = obj.GetType();
-        Debug.Log($"{new string(' ', level * 2)}Logging properties of object: {type.Name}");
-
-        // Prevenir loops infinitos
-        if (level >= maxDepth)
-        {
-            Debug.Log($"{new string(' ', (level + 1) * 2)}Max depth reached.");
-            return;
-        }
-
-        // Obter as propriedades públicas
-        var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-        foreach (var property in properties)
-        {
-            try
-            {
-                // Obter o nome e valor da propriedade
-                var name = property.Name;
-                var value = property.GetValue(obj, null);
-
-                // Logar a propriedade
-                Debug.Log($"{new string(' ', (level + 1) * 2)}{name}: {value}");
-
-                // Se a propriedade é um objeto (e não um tipo primitivo ou string), logar recursivamente
-                if (value != null && !(value is string) && !(value is ValueType) && !(value is IEnumerable))
-                {
-                    LogProperties(value, level + 1, maxDepth);
-                }
-            }
-            catch
-            {
-                Debug.LogWarning($"{new string(' ', (level + 1) * 2)}Failed to log property: {property.Name}");
-            }
-        }
-    }
-}
-
 public class Enemy : Battler
 {
     public EnemyDefenseAction defenseAction;
-    public Enemy(string name, int initiative, int health, int mana)
-        : base(name, initiative, false, health, mana) { }
+    public EnemyAttackAction attackAction;
+    public Enemy(string Name, int Initiative, bool IsPlayer, int Health, int Mana, int Attack, int Defense, int Dexterity, 
+                    int Resistance, int Mentality, int Luck, float CriticalDamage, float CriticalChance, float ArmourPenetration, float Recovery, float Absorsion, float Accuracy)
+        : base(Name, Initiative, false, Health, Mana, Attack, Defense, Dexterity, Resistance, Mentality, Luck, CriticalDamage, 
+            CriticalChance, ArmourPenetration, Recovery, Absorsion, Accuracy) { }
 
     public override void TakeAction(ActionData actionData)
     {
-        Debug.Log($"{Name} está executando uma ação de IA...");
+        attackAction = battlerGameobject.GetComponent<EnemyAttackAction>();
+        attackAction.ExecuteAttack(actionData);
     }
 
     public override void Defend(ActionData actionData)
     {
         defenseAction = battlerGameobject.GetComponent<EnemyDefenseAction>();
-        Debug.Log($"{Name} está se defendendo contra {actionData.Attacker.Name}");
         defenseAction.ExecuteDefense(actionData);
     }
 
-    public override void ApplyDamage(int damage)
+    public override void ModifyStat(string statName, float value)
     {
-        throw new System.NotImplementedException();
+        switch (statName)
+        {
+            case "Health": Health += (int)value; break;
+            case "Mana": Mana += (int)value; break;
+            case "Attack": Attack += (int)value; break;
+            case "Defense": Defense += (int)value; break;
+            case "Dexterity": Dexterity += (int)value; break;
+            case "CriticalDamage": CriticalDamage += value; break;
+            case "CriticalChance": CriticalChance += value; break;
+            case "ArmourPenetration": ArmourPenetration += value; break;
+            case "Accuracy": Accuracy += value; break;
+        }
+    }
+
+    public override void SetMana(int amount)
+    {
+        Mana+=amount;
     }
 }

@@ -8,11 +8,15 @@ public class GeneralUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text currentActionState;
     [SerializeField] private TMP_Text currentAvailableEnergy;
+    [SerializeField] private TMP_Text currentSpentEnergy;
+    private ActionData actionData;
 
-    public void Initialize(ActionData actionData)
+    public void Initialize(ActionData data)
     {
+        actionData = data;
+        InitializeEnemiesStatsUI();
         gameObject.SetActive(true);
-        SetCurrentAvailableEnergy($"Energy: {actionData.PlayerStats.Mana}");
+        SetPlayerCurrentAvailableEnergyUI(actionData.PlayerStats.Mana);
     }
 
     public void SetCurrentActionState(string state)
@@ -20,13 +24,26 @@ public class GeneralUI : MonoBehaviour
         currentActionState.text = state;
     }
 
-    public void SetCurrentAvailableEnergy(string amount)
+    public void SetPlayerCurrentAvailableEnergyUI(int energy)
     {
-        currentAvailableEnergy.text = amount;
+        currentAvailableEnergy.text = $"Energy: {energy}";
+    }
+
+    public void SetCurrentSpentEnergyUI(int amount)
+    {
+        currentSpentEnergy.text = $"Spent Mana: {amount}";
     }
 
     public void Hide()
     {
         gameObject.SetActive(false);
+    }
+
+    public void InitializeEnemiesStatsUI()
+    {
+        foreach(var enemy in actionData.EnemiesStats)
+        {
+           enemy.battlerGameobject.GetComponent<CharacterBar>().UpdateUI(enemy.Health);
+        }
     }
 }

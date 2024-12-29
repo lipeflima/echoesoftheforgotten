@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +8,21 @@ using UnityEngine;
 public class TurnManager : MonoBehaviour {
     public List<Battler> battlers = new List<Battler>();
     private int currentTurnIndex = 0;
-    private int energyPool = 10;
     public Battler currentDefender { get; set; }
     public Battler currentAttacker { get; set; }
     private TargetManager targetManager;
+    private TurnResolver turnResolver;
     private ActionData actionData;
     private int turnCount = 0;
+    private int cycleMana = 10;
     private bool IsPlayerActionCompleted = false;
+    public bool IsCombatRunning = true;
+    public MenuMain menuMain; 
+    public StatsUI statsUI;
 
     void Start() 
     {
+        InitializeTurnManager();
         InitializeActionData();
         InitializeBattlers();
         StartTurnCycle();
@@ -39,14 +45,29 @@ public class TurnManager : MonoBehaviour {
                 PlayerCombat player = new(
                     playerStats.Name,
                     playerStats.Initiative,
+                    true,
                     playerStats.Health,
-                    playerStats.Mana
+                    playerStats.Mana,
+                    playerStats.Attack,
+                    playerStats.Defense,
+                    playerStats.Dexterity,
+                    playerStats.Resistance,
+                    playerStats.Mentality,
+                    playerStats.Luck,
+                    playerStats.CriticalDamage,
+                    playerStats.CriticalChance,
+                    playerStats.ArmourPenetration,
+                    playerStats.Recovery,
+                    playerStats.Absorsion,
+                    playerStats.Accuracy
                 );
                 player.battlerGameobject = playerObject;
                 var playerComponent = playerObject.AddComponent<BattlerComponent>();
                 playerComponent.battler = player;
                 battlers.Add(player);
-                actionData.PlayerStats = playerStats;
+                actionData.PlayerStats = player;
+                // Player Stats
+                statsUI.CreateStatsUI(player);
             }
         }
         
@@ -59,14 +80,29 @@ public class TurnManager : MonoBehaviour {
                 Enemy enemy = new(
                     enemyStats.Name,
                     enemyStats.Initiative,
+                    false,
                     enemyStats.Health,
-                    enemyStats.Mana
+                    enemyStats.Mana,
+                    enemyStats.Attack,
+                    enemyStats.Defense,
+                    enemyStats.Dexterity,
+                    enemyStats.Resistance,
+                    enemyStats.Mentality,
+                    enemyStats.Luck,
+                    enemyStats.CriticalDamage,
+                    enemyStats.CriticalChance,
+                    enemyStats.ArmourPenetration,
+                    enemyStats.Recovery,
+                    enemyStats.Absorsion,
+                    enemyStats.Accuracy
                 );
                 enemy.battlerGameobject = enemyObject;
                 var enemyComponent = enemyObject.AddComponent<BattlerComponent>();
                 enemyComponent.battler = enemy;
                 battlers.Add(enemy);
-                actionData.EnemyStats = enemyStats;
+                actionData.EnemiesStats.Add(enemy);
+                // Enemy Stats
+                statsUI.CreateStatsUI(enemy);
             }
         }
 
@@ -78,14 +114,14 @@ public class TurnManager : MonoBehaviour {
 
     private IEnumerator TurnCycle()
     {
-        while (turnCount <= 10)
+        while (IsCombatRunning)
         {
             currentAttacker = battlers[currentTurnIndex];
             if (!currentAttacker.IsPlayer)
             {
-                currentDefender = battlers.Find(battler => battler.IsPlayer); 
+                currentDefender = battlers.Find(battler => battler.IsPlayer);
             } else {
-                currentDefender = battlers.Where(b => !b.IsPlayer).OrderByDescending(b => b.Initiative).FirstOrDefault();   
+                currentDefender = battlers.Where(b => !b.IsPlayer).OrderByDescending(b => b.Initiative).FirstOrDefault();
             }
 
             targetManager.HighlightAttacker(currentAttacker.battlerGameobject);
@@ -114,12 +150,11 @@ public class TurnManager : MonoBehaviour {
                 yield return StartCoroutine(WaitForDefenderActionComplete());
             }
 
-            // TurnResolver resolver = new TurnResolver();
-            // resolver.ResolveTurn(attackerData, defenderData);
-
-
+            turnResolver.ResolveTurn(actionData);
             NextTurn();
         }
+
+        menuMain.GoToLevel("Acampamento");
     }
 
     private IEnumerator WaitForPlayerAction(string action)
@@ -148,6 +183,7 @@ public class TurnManager : MonoBehaviour {
     private void NextTurn()
     {
         turnCount++;
+        // AddCycleMana(currentAttacker, currentDefender);
         currentTurnIndex = (currentTurnIndex + 1) % battlers.Count;
     }
 
@@ -158,8 +194,13 @@ public class TurnManager : MonoBehaviour {
         if (targetManager != null)
         {
             List<GameObject> battlerObjects = battlers.Select(b => b.battlerGameobject).ToList();
-            targetManager.InitializeTargets(battlers, battlerObjects);
+            targetManager.InitializeTargets(battlers, battlerObjects, actionData);
         }
+    }
+
+    private void InitializeTurnManager()
+    {
+        turnResolver = FindObjectOfType<TurnResolver>();
     }
 
     public void InitializeActionData()
@@ -172,8 +213,9 @@ public class TurnManager : MonoBehaviour {
         IsPlayerActionCompleted = true;
     }
 
-    public int GetAvailableEnergy()
+    private void AddCycleMana(Battler attacker, Battler defender)
     {
-        return energyPool;
+        attacker.Mana += cycleMana;
+        defender.Mana += cycleMana;
     }
 }

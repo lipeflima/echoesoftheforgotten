@@ -13,16 +13,12 @@ public class TargetManager : MonoBehaviour
 
     private GameObject attackerHighlight;
     private GameObject defenderHighlight;
-    private TurnManager turnManager;
-
-    public void Awake()
-    {
-        turnManager = FindObjectOfType<TurnManager>();
-    }
+    private ActionData actionData;
 
     // Inicializa os alvos com base nos Battlers
-    public void InitializeTargets(List<Battler> battlers, List<GameObject> battlerObjects)
+    public void InitializeTargets(List<Battler> battlers, List<GameObject> battlerObjects, ActionData data)
     {
+        actionData = data;
         this.battlers = battlers;
         this.battlerObjects = battlerObjects;
 
@@ -49,7 +45,7 @@ public class TargetManager : MonoBehaviour
         BattlerComponent targetComponent = defender.GetComponent<BattlerComponent>();
         Battler logicalDefender = targetComponent.battler;
 
-        turnManager.currentDefender = logicalDefender;
+        actionData.Defender = logicalDefender;
 
         HighlightDefender(defender);
     }
