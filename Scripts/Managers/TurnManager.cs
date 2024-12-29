@@ -18,6 +18,7 @@ public class TurnManager : MonoBehaviour {
     private bool IsPlayerActionCompleted = false;
     public bool IsCombatRunning = true;
     public MenuMain menuMain; 
+    public StatsUI statsUI;
 
     void Start() 
     {
@@ -65,6 +66,8 @@ public class TurnManager : MonoBehaviour {
                 playerComponent.battler = player;
                 battlers.Add(player);
                 actionData.PlayerStats = player;
+                // Player Stats
+                statsUI.CreateStatsUI(player);
             }
         }
         
@@ -98,6 +101,8 @@ public class TurnManager : MonoBehaviour {
                 enemyComponent.battler = enemy;
                 battlers.Add(enemy);
                 actionData.EnemiesStats.Add(enemy);
+                // Enemy Stats
+                statsUI.CreateStatsUI(enemy);
             }
         }
 

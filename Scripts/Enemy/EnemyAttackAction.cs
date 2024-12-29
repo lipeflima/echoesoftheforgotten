@@ -83,8 +83,10 @@ public class EnemyAttackAction : MonoBehaviour
         }
         
         context.attackStrategy = DetermineAttackStrategy(context.selectedAttackStrategies);
+        Debug.Log($"EnemyAttackStrategy: {context.attackStrategy}");
         context.HasStrategyApplied = strategyApplied;
         data.CombatAction.AttackerAction.AttackType = DetermineAttackType(context);
+        Debug.Log($"EnemyAttackType: {data.CombatAction.AttackerAction.AttackType}");
     }
 
     private void SelectCard(Card card, EnemyContext context)
@@ -115,6 +117,7 @@ public class EnemyAttackAction : MonoBehaviour
 
     private AttackType DetermineAttackType(EnemyContext context)
     {
+        if (!context.HasStrategyApplied) return AttackType.Basic;
         if (HasAppliedArmourBreakStategy(context)) return AttackType.CardAttack;
         if (HasAppliedCriticalStrike(context)) return AttackType.CardAttack;
         if (HasAppliedDisruptAccuracy(context)) return AttackType.Basic;

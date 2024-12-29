@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using static ActionManager;
 
@@ -16,7 +17,7 @@ public class TurnResolver : MonoBehaviour
         // 1. Aplica mana
         ApplyManaEnergy(actionData);
         // 2. Aplica buffs e debuffs
-        ApplyBuffsAndDebuffs(actionData.CombatAction.AttackerAction.CardEffects, actionData.Defender);
+        ApplyBuffsAndDebuffs(actionData);
         
         // 3. Processa o ataque
         int damage = ProcessAttack(actionData);
@@ -25,15 +26,36 @@ public class TurnResolver : MonoBehaviour
         Debug.Log($"Turn damage: {damage}");
         Debug.Log($"Turn avoided Damage: {avoidedDamage}");
 
+        if (actionData.CardData.AttackerSelectedCards.Count  > 0)
+        {
+            foreach(Card attackCard in actionData.CardData.AttackerSelectedCards)
+            {
+                ApplyCardEffects(attackCard, actionData.Attacker, actionData.Defender);
+            }
+        }
+        if (actionData.CardData.DefenderSelectedCards.Count > 0)
+        {
+            foreach(Card defenseCard in actionData.CardData.DefenderSelectedCards)
+            {
+                ApplyCardEffects(defenseCard, actionData.Attacker, actionData.Defender);
+            }
+        }
+
         bool hasCounterAttack = IsCounterAttackSuccessful(actionData.Defender.Dexterity, actionData.Attacker.Dexterity) && actionData.CombatAction.DefenderAction.DefenseType == DefenseType.CounterAttack;
 
         // 4. Aplica o resultado ao defensor ou Aplica efeitos de contra-ataque no atacante, se houver.
         if (!hasCounterAttack) {
             actionData.Defender.ApplyDamage(damage - avoidedDamage);
         } else {
-            actionData.Attacker.ApplyDamage(avoidedDamage);
+            actionData.Attacker.ApplyDamage(-avoidedDamage);
         }
     }
+
+    private void ApplyCardEffects(Card card, Battler attacker, Battler defender)
+    {
+        // CardResolver.Resolve(card).ExecuteAction(attacker, defender);
+    }
+
 
     private void ApplyManaEnergy(ActionData actionData)
     {
@@ -70,24 +92,30 @@ public class TurnResolver : MonoBehaviour
             case DefenseType.CounterAttack:
                 return CalculatedCounterAttackDamage(actionData.Defender.Dexterity, actionData.Attacker.Dexterity, actionData.Attacker.Attack);
             case DefenseType.Evade:
-                return 0; // Fake attack does no damage
+                return 0; 
             default:
                 break;
         }
         return 0;
     }
 
-    private void ApplyBuffsAndDebuffs(List<CardEffectData> effects, Battler target)
+    private void ApplyBuffsAndDebuffs(ActionData actionData)
     {
+        List<CardEffectData> effects = actionData.CombatAction.AttackerAction.CardEffects;
+        Battler attacker = actionData.Attacker;
+        Battler defender = actionData.Defender;
+        CurrentTurnAction turnAction = actionData.CurrentTurnAction;
+
         foreach(var effect in effects)
         {
             switch (effect.effectType)
             {
+                // Buff e Debuff é automaticamente aplicado no battler que usou a carta
                 case Card.CardType.Buff:
-                    ApplyBuff(effect, target);
+                    ApplyBuff(effect, turnAction == CurrentTurnAction.Attack ? attacker : defender);
                     break;
                 case Card.CardType.Debuff:
-                    ApplyBuff(effect, target);
+                    ApplyBuff(effect, turnAction == CurrentTurnAction.Attack ? defender : attacker);
                     break;
             }
         }
@@ -95,10 +123,6 @@ public class TurnResolver : MonoBehaviour
 
     public void ApplyBuff(CardEffectData effect, Battler target)
     {
-        // Debug.Log($"StatName {effect.statName}");
-        // Debug.Log($"value {effect.value}");
-        // Debug.Log($">>>>>>>>>Battler {target.Name}");
-        
         // Aplica o buff imediatamente
         target.ModifyStat(effect.statName, effect.value);
 
@@ -165,4 +189,53 @@ public class TurnResolver : MonoBehaviour
         }
         return defenseSome;
     }
+
+    public class DebugLogger
+{
+    public static void LogProperties(object obj, int level = 0, int maxDepth = 3)
+    {
+        if (obj == null)
+        {
+            Debug.Log($"{new string(' ', level * 2)}Object is null");
+            return;
+        }
+
+        // Obter o tipo do objeto
+        var type = obj.GetType();
+        Debug.Log($"{new string(' ', level * 2)}Logging properties of object: {type.Name}");
+
+        // Prevenir loops infinitos
+        if (level >= maxDepth)
+        {
+            Debug.Log($"{new string(' ', (level + 1) * 2)}Max depth reached.");
+            return;
+        }
+
+        // Obter as propriedades públicas
+        var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        foreach (var property in properties)
+        {
+            try
+            {
+                // Obter o nome e valor da propriedade
+                var name = property.Name;
+                var value = property.GetValue(obj, null);
+
+                // Logar a propriedade
+                Debug.Log($"{new string(' ', (level + 1) * 2)}{name}: {value}");
+
+                // Se a propriedade é um objeto (e não um tipo primitivo ou string), logar recursivamente
+                if (value != null && !(value is string) && !(value is ValueType) && !(value is IEnumerable))
+                {
+                    LogProperties(value, level + 1, maxDepth);
+                }
+            }
+            catch
+            {
+                Debug.LogWarning($"{new string(' ', (level + 1) * 2)}Failed to log property: {property.Name}");
+            }
+        }
+    }
+}
 }

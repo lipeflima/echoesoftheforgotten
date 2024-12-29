@@ -103,11 +103,31 @@ public class EnemyDefenseAction : MonoBehaviour
 
     private DefenseType DetermineDefenseStrategy(EnemyContext context)
     {
-        if (!context.HasStrategyApplied) return DefenseType.Evade;
-        if (HasDefenseCard(context)) return DefenseType.CardDefense;
-        if (HasHealthCard(context)) return DefenseType.Basic;
-        if (HasDexterityCard(context)) return DefenseType.CounterAttack;
-        if (HasBuffOrDebuffCard(context)) return DefenseType.Basic;
+        if (!context.HasStrategyApplied)
+        {
+            Debug.Log("Nenhuma estrategia aplicada");
+            return DefenseType.Basic;
+        }
+        if (HasDefenseCard(context)) {
+            Debug.Log("Aplicando estrategia de BlockStrongAttack");
+            return DefenseType.CardDefense;
+        }
+        if (HasHealthCard(context))
+        {
+            Debug.Log("Aplicando estrategia de RegenerateHealth");
+            return DefenseType.Basic;
+        }
+        if (HasDexterityCard(context))
+        {
+            Debug.Log("Aplicando estrategia de CounterLowCOstAttack");
+            return DefenseType.CounterAttack;
+        }
+        if (HasBuffOrDebuffCard(context))
+        {
+            Debug.Log("Aplicando estrategia de BestBuff");
+            return DefenseType.Basic;
+        }
+        Debug.Log("Aplicando estrategia de evade");
         return DefenseType.Evade;
     }
 

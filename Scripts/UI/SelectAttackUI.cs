@@ -6,16 +6,11 @@ public class SelectAttackUI : MonoBehaviour
 {
     private Action onComplete;
     [SerializeField] private Button nextButton;
-    [SerializeField] private Button basicAttackButton;
-    [SerializeField] private Button fakeAttackButton;
+    [SerializeField] private Button BasicAttackButton;
+    [SerializeField] private Button FakeAttackButton;
     [SerializeField] private Button CardAttackButton;
+    [SerializeField] private int minFakeAttackManaAmount = 3;
     private ActionData actionData;
-
-    private bool HasAttackCard()
-    {
-        return actionData.CardData.AttackerSelectedCards.Count > 0;
-    }
-
 
     public void Initialize(ActionData data, Action onCompleteCallback)
     {
@@ -24,21 +19,22 @@ public class SelectAttackUI : MonoBehaviour
         onComplete = onCompleteCallback;
 
         CardAttackButton.interactable = HasAttackCard();
+        FakeAttackButton.interactable = HasManaToFakeAttack();
 
         nextButton.interactable = false; 
         nextButton.onClick.AddListener(CompleteStep);
 
-        basicAttackButton.onClick.RemoveListener(() => {
+        BasicAttackButton.onClick.RemoveListener(() => {
             OnBasicAttack();
         });
-        basicAttackButton.onClick.AddListener(() => {
+        BasicAttackButton.onClick.AddListener(() => {
             OnBasicAttack();
         });
 
-        fakeAttackButton.onClick.RemoveListener(() => {
+        FakeAttackButton.onClick.RemoveListener(() => {
             OnFakeAttack();
         });
-        fakeAttackButton.onClick.AddListener(() => {
+        FakeAttackButton.onClick.AddListener(() => {
             OnFakeAttack();
         });
         CardAttackButton.onClick.RemoveListener(() => {
@@ -49,12 +45,19 @@ public class SelectAttackUI : MonoBehaviour
         });
     }
 
+    private bool HasAttackCard()
+    {
+        return actionData.CardData.AttackerSelectedCards.Count > 0;
+    }
+
+    private bool HasManaToFakeAttack()
+    {
+        return actionData.Attacker.Mana >= minFakeAttackManaAmount;
+    }
+
     private void CompleteStep()
     {
         gameObject.SetActive(false);
-        basicAttackButton.interactable = true; 
-        fakeAttackButton.interactable = true;
-        CardAttackButton.interactable = true;
         onComplete?.Invoke();
     }
 
@@ -62,18 +65,12 @@ public class SelectAttackUI : MonoBehaviour
     {
         actionData.CombatAction.AttackerAction.AttackType = ActionManager.AttackType.Basic;
         nextButton.interactable = true;
-        basicAttackButton.interactable = false; 
-        fakeAttackButton.interactable = true;
-        CardAttackButton.interactable = HasAttackCard();
     }
     
     private void OnFakeAttack()
     {
         actionData.CombatAction.AttackerAction.AttackType = ActionManager.AttackType.FakeAttack;
         nextButton.interactable = true;
-        basicAttackButton.interactable = true; 
-        fakeAttackButton.interactable = false;
-        CardAttackButton.interactable = HasAttackCard();
         
     }
 
@@ -81,8 +78,5 @@ public class SelectAttackUI : MonoBehaviour
     {
         actionData.CombatAction.AttackerAction.AttackType = ActionManager.AttackType.CardAttack;
         nextButton.interactable = true;
-        basicAttackButton.interactable = true; 
-        fakeAttackButton.interactable = true;
-        CardAttackButton.interactable = false;
     }
 }
