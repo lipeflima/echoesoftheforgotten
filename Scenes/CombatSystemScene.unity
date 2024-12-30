@@ -89664,7 +89664,7 @@ Transform:
   m_GameObject: {fileID: 1806346473}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.93}
+  m_LocalPosition: {x: 0, y: 1.05, z: 0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -103693,6 +103693,12 @@ MonoBehaviour:
     particleSystem: {fileID: 136414, guid: d59fb75f8c3c18040903bc802beec898, type: 3}
     animName: FuriaIgnea
     delayTime: 2
+    animTime: 1
+    spawnPoint: {fileID: 1806346474}
+  - name: TakeDamage
+    particleSystem: {fileID: 846011304243710033, guid: eafff4b1b26e4a442a277804b92d9ddc, type: 3}
+    animName: Damaged
+    delayTime: 0
     animTime: 1
     spawnPoint: {fileID: 1806346474}
   anim: {fileID: 2002768885}
