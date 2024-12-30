@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Uma aura inspiradora
   EnergyCost: 4
   behaviorClassName: InspiringAuraBehavior
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: fc565046ebd41d640839ae0156451afd, type: 3}
   effects:
   - effectName: Inspiring Aura
     statName: Attack

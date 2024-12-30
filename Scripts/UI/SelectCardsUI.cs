@@ -13,6 +13,7 @@ public class SelectCardsUI : MonoBehaviour
     private Action onComplete;
     private ActionData actionData;
     [SerializeField] private CardUI cardUI;
+    [SerializeField] private GeneralUI generalUI;
     public TMP_Text instruction;
     public bool isSelectCardsActive = false;
 
@@ -44,7 +45,7 @@ public class SelectCardsUI : MonoBehaviour
         {
             gameObject.transform.GetChild(0).gameObject.SetActive(true);
         } else {
-            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            gameObject.transform.GetChild(0).gameObject.SetActive(false);
         }
     }
 
@@ -81,6 +82,7 @@ public class SelectCardsUI : MonoBehaviour
             actionData.CardData.DefenderSelectedCards = cardsFromClones;
         }
 
+        // generalUI.transform.GetChild(3).gameObject.SetActive(false);
         cardUI.ClearSelectedCards();
         cardUI.ActivateSelectCard(false);
         gameObject.SetActive(false);

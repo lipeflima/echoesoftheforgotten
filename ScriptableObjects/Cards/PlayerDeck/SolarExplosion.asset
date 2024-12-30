@@ -16,7 +16,7 @@ MonoBehaviour:
   description: "Uma explos\xE3o solar poderosa"
   EnergyCost: 4
   behaviorClassName: SolarExplosionBehavior
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: a1c8e184499ade5428b24bf9e4967820, type: 3}
   effects:
   - effectName: Dano
     statName: Health
