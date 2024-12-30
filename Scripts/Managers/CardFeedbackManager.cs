@@ -17,5 +17,6 @@ public class CardFeedbackManager : FeedbackManager
     public void SetCardBeforeInvoke(string name)
     {
         currentCardName = name;
+        BattleEffectsTest.instance.SetCardName(currentCardName);
     }
 }

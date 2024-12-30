@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a309d03f25e293648a4b231420dd2b8c, type: 3}
   m_Name: FireFury
   m_EditorClassIdentifier: 
-  cardName: Furia Ignea
+  cardName: FuriaIgnea
   description: Furia Ignea
   EnergyCost: 3
   behaviorClassName: FireFuryBehavior
