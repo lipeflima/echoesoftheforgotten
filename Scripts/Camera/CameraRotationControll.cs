@@ -23,7 +23,7 @@ public class CameraRotationControl : MonoBehaviour
 
     void Update()
     {
-        LeftMouseInput = Input.GetMouseButton(2);
+        LeftMouseInput = Input.GetMouseButton(0);
 
         if (povComponent == null)
             return;
