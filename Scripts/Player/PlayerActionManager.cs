@@ -47,7 +47,6 @@ public class PlayerActionManager : MonoBehaviour
     private void StartManageHand()
     {
         currentState = ActionStates.ManageHand;
-        generalUI.SetCurrentActionState("Manage Hand");
         cardUI.DisplayCardUI(true);
         manageHandUI.Initialize(actionData, () => {
             if (actionData.CurrentTurnAction == ActionManager.CurrentTurnAction.Attack)
@@ -63,21 +62,18 @@ public class PlayerActionManager : MonoBehaviour
     private void StartSelectAttackCards()
     {
         currentState = ActionStates.SelectAttackCards;
-        generalUI.SetCurrentActionState("Select Attack Cards");
         selectCardsUI.Initialize(actionData, () => GoToNextAttackState(ActionStates.SelectTarget));
     }
 
     private void StartSelectTarget()
     {
         currentState = ActionStates.SelectTarget;
-        generalUI.SetCurrentActionState("Select Target");
         selectTargetUI.Initialize(() => GoToNextAttackState(ActionStates.SelectAttack));
     }
 
     private void StartSelectAttack()
     {
         currentState = ActionStates.SelectAttack;
-        generalUI.SetCurrentActionState("Select Attack");
         selectAttackUI.Initialize(actionData, () => GoToNextAttackState(ActionStates.Confirm));
     }
 
@@ -86,14 +82,12 @@ public class PlayerActionManager : MonoBehaviour
     private void StartSelectDefenseCards()
     {
         currentState = ActionStates.SelectDefenseCards;
-        generalUI.SetCurrentActionState("Select Defense Cards");
         selectCardsUI.Initialize(actionData, () => GoToNextDefenseState(ActionStates.SelectDefense));
     }
 
     private void StartSelectDefense()
     {
         currentState = ActionStates.SelectDefense;
-        generalUI.SetCurrentActionState("Select Defense");
         selectDefenseUI.Initialize(actionData, () => GoToNextDefenseState(ActionStates.Confirm));
     }
 
@@ -102,7 +96,6 @@ public class PlayerActionManager : MonoBehaviour
     private void StartConfirmAction()
     {
         currentState = ActionStates.Confirm;
-        generalUI.SetCurrentActionState("Confirm Actions");
         confirmActionUI.Initialize(ConfirmAction, CancelAction);
     }
 

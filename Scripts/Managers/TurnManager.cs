@@ -125,8 +125,12 @@ public class TurnManager : MonoBehaviour {
             currentAttacker = battlers[currentTurnIndex];
             if (!currentAttacker.IsPlayer)
             {
+                generalUI.transform.GetChild(1).gameObject.SetActive(true);
+                generalUI.transform.GetChild(0).gameObject.SetActive(false);
                 currentDefender = battlers.Find(battler => battler.IsPlayer);
             } else {
+                generalUI.transform.GetChild(0).gameObject.SetActive(true);
+                generalUI.transform.GetChild(1).gameObject.SetActive(false);
                 currentDefender = battlers.Where(b => !b.IsPlayer).OrderByDescending(b => b.Initiative).FirstOrDefault();
             }
 
