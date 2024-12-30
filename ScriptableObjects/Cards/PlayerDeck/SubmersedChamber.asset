@@ -16,7 +16,7 @@ MonoBehaviour:
   description: 'Uma bolha '
   EnergyCost: 3
   behaviorClassName: SubmersedChamberBehavior
-  artwork: {fileID: 21300000, guid: fc565046ebd41d640839ae0156451afd, type: 3}
+  artwork: {fileID: 21300000, guid: 4de81ac7b78d43940af034f507a6deea, type: 3}
   effects:
   - effectName: Debuff
     statName: Mana

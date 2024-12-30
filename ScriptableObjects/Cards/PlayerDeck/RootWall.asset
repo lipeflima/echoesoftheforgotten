@@ -16,7 +16,7 @@ MonoBehaviour:
   description: RooWall
   EnergyCost: 3
   behaviorClassName: RootWallBehavior
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 48f78b75c35d02c4c890538b605ce3f7, type: 3}
   effects:
   - effectName: Defense
     statName: Defense

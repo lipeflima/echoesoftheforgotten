@@ -16,7 +16,7 @@ MonoBehaviour:
   description: "Um p\xE3o feito de mana"
   EnergyCost: 0
   behaviorClassName: StandardBehavior
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: fc565046ebd41d640839ae0156451afd, type: 3}
   effects:
   - effectName: Buff
     statName: Mana
