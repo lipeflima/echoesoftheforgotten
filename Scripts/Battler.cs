@@ -52,6 +52,7 @@ public abstract class Battler
     public abstract void Defend(ActionData actionData);
     
     public abstract void ApplyDamage(int damage);
+    public abstract int AvoidedDamage();
     public abstract void ModifyStat(string statName, float value);
     public abstract void SetMana(int amount);
     public abstract void ApplyEffect(CardEffectData effect);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -64,7 +65,7 @@ public class  PlayerCombat : Battler
 
     public override void ApplyDamage(int damage)
     {
-        Health -= damage;
+        Health -= Mathf.Max(0, damage - AvoidedDamage());
         // FEEDBACK
         cardFeedbackManager = CardFeedbackManager.instance;
         cardFeedbackManager.SetCardBeforeInvoke("TakeDamage");
@@ -75,6 +76,13 @@ public class  PlayerCombat : Battler
         // StatsUI
         statsUI = TurnManager.instance.statsUI;
         statsUI.CreateStatsUI(this);
+    }
+
+    public override int AvoidedDamage()
+    {
+        int avoidedDamage = (int)Math.Round(Defense*ArmourPenetration + Dexterity*Accuracy);
+        Debug.Log($"[Player] Dano evitado: {avoidedDamage}");
+        return avoidedDamage;
     }
 
     public override void SetMana(int amount)

@@ -51,7 +51,7 @@ public class Enemy : Battler
 
     public override void ApplyDamage(int damage)
     {
-        Health -= damage;
+        Health -= Mathf.Max(0, damage - AvoidedDamage());
         // Feedback
         cardFeedbackManager = CardFeedbackManager.instance;
         cardFeedbackManager.SetCardBeforeInvoke("TakeDamage");
@@ -62,6 +62,13 @@ public class Enemy : Battler
         // StatsUI
         statsUI = TurnManager.instance.statsUI;
         statsUI.CreateStatsUI(this);
+    }
+
+    public override int AvoidedDamage()
+    {
+        int avoidedDamage = (int)Math.Round(Defense*ArmourPenetration + Dexterity*Accuracy);
+        Debug.Log($"[Enemy] Dano evitado: {avoidedDamage}");
+        return avoidedDamage;
     }
 
     public override void SetMana(int amount)

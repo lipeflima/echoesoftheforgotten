@@ -13,8 +13,6 @@ public class TurnResolver : MonoBehaviour
     private CardFeedbackManager cardFeedbackManager;
     [SerializeField] private GeneralUI generalUI;
     private static System.Random random = new System.Random();
-    private bool appliedAttackCardEffects = false;
-    private bool appliedDefenseCardEffects = false;
 
     public void Start()
     {
@@ -29,9 +27,15 @@ public class TurnResolver : MonoBehaviour
         // 2. Verifica ações evasivas e de contrataque
         bool hasCounterAttack = IsCounterAttackSuccessful(actionData.Defender.Dexterity, actionData.Attacker.Dexterity) && actionData.CombatAction.DefenderAction.DefenseType == DefenseType.CounterAttack;
         bool hasEvaded = IsEvadeSuccessful(actionData.Defender.Dexterity, actionData.Defender.Accuracy, actionData.Attacker.Dexterity) && actionData.CombatAction.DefenderAction.DefenseType == DefenseType.Evade;
+        bool hasFaked = actionData.CombatAction.AttackerAction.AttackType == AttackType.FakeAttack;
+        bool hasCardAttacked = actionData.CombatAction.AttackerAction.AttackType == AttackType.CardAttack;
+        bool hasCardDefended = actionData.CombatAction.DefenderAction.DefenseType == DefenseType.CardDefense;
+
+        if (hasFaked) return;
 
         // 3. Aplica os efeitos das cartas
-        ApplyCardEffects(actionData);
+        if (hasCardAttacked) ApplyAttackCardEffects(actionData);
+        if (hasCardDefended) ApplyDefenseCardEffects(actionData);
 
         if (hasEvaded)
         {
@@ -41,29 +45,26 @@ public class TurnResolver : MonoBehaviour
         }
         
         // 4. Processa o ataque e defesa
-        int damage = appliedAttackCardEffects ? 0 : ProcessBasicAttack(actionData);
-        int avoidedDamage = appliedDefenseCardEffects ? 0 : ProcessBasicDefense(actionData);
+        int damage = ProcessAttack(actionData);
 
         Debug.Log($"Turn damage: {damage}");
-        Debug.Log($"Turn avoided Damage: {avoidedDamage}");
 
         // 4. Aplica o resultado ao defensor ou Aplica efeitos de contra-ataque no atacante, se houver.
         if (hasCounterAttack) {
             Debug.Log("O defensor contra-atacou!");
-            actionData.Attacker.ApplyDamage(-avoidedDamage);
+            actionData.Attacker.ApplyDamage(CalculatedCounterAttackDamage(actionData.Defender.Dexterity, actionData.Attacker.Dexterity, actionData.Attacker.Attack));
         } else {
-            actionData.Defender.ApplyDamage(Mathf.Max(0, damage - avoidedDamage));
+            actionData.Defender.ApplyDamage(damage);
         }
 
         actionData.CardData.AttackerSelectedCards.Clear();
         actionData.CardData.DefenderSelectedCards.Clear();
     }
 
-    private void ApplyCardEffects(ActionData actionData)
+    private void ApplyAttackCardEffects(ActionData actionData)
     {
         if (actionData.CardData.AttackerSelectedCards.Count  > 0)
         {
-            appliedAttackCardEffects = true;
             foreach(Card attackCard in actionData.CardData.AttackerSelectedCards)
             {
                 CardBehavior behavior = CardResolver.Resolve(attackCard);
@@ -84,10 +85,12 @@ public class TurnResolver : MonoBehaviour
                 }
             }
         }
-        
+    }
+    
+    private void ApplyDefenseCardEffects(ActionData actionData)
+    {
         if (actionData.CardData.DefenderSelectedCards.Count > 0)
         {
-            appliedDefenseCardEffects = true;
             foreach(Card defenseCard in actionData.CardData.DefenderSelectedCards)
             {
                 CardBehavior behavior = CardResolver.Resolve(defenseCard);
@@ -117,7 +120,7 @@ public class TurnResolver : MonoBehaviour
         generalUI.SetPlayerCurrentAvailableEnergyUI(actionData.PlayerStats.Mana);
     }
 
-    private int ProcessBasicAttack(ActionData actionData)
+    private int ProcessAttack(ActionData actionData)
     {
         switch (actionData.CombatAction.AttackerAction.AttackType)
         {
@@ -128,29 +131,9 @@ public class TurnResolver : MonoBehaviour
             case AttackType.FakeAttack:
                 return 0;
             default:
-                break;
+                return 0;
         }
-        return 0;
     }
-
-    private int ProcessBasicDefense(ActionData actionData)
-    {
-        switch (actionData.CombatAction.DefenderAction.DefenseType)
-        {
-            case DefenseType.Basic:
-                return Math.Max(0, (int)((actionData.Defender.Defense * actionData.Defender.ArmourPenetration) + actionData.Defender.Dexterity*0.3));
-            case DefenseType.CardDefense:
-                return Math.Max(0, (int)((actionData.Defender.Defense * actionData.Defender.ArmourPenetration) + actionData.Defender.Dexterity*0.3));
-            case DefenseType.CounterAttack:
-                return CalculatedCounterAttackDamage(actionData.Defender.Dexterity, actionData.Attacker.Dexterity, actionData.Attacker.Attack);
-            case DefenseType.Evade:
-                return 0; 
-            default:
-                break;
-        }
-        return 0;
-    }
-
 
     public bool IsCounterAttackSuccessful(int defenderDexterity, int attackerDexterity)
     {
@@ -206,52 +189,4 @@ public class TurnResolver : MonoBehaviour
         return defenderResult >= adjustedThreshold;
     }
 
-    public class DebugLogger
-{
-    public static void LogProperties(object obj, int level = 0, int maxDepth = 3)
-    {
-        if (obj == null)
-        {
-            Debug.Log($"{new string(' ', level * 2)}Object is null");
-            return;
-        }
-
-        // Obter o tipo do objeto
-        var type = obj.GetType();
-        Debug.Log($"{new string(' ', level * 2)}Logging properties of object: {type.Name}");
-
-        // Prevenir loops infinitos
-        if (level >= maxDepth)
-        {
-            Debug.Log($"{new string(' ', (level + 1) * 2)}Max depth reached.");
-            return;
-        }
-
-        // Obter as propriedades públicas
-        var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-        foreach (var property in properties)
-        {
-            try
-            {
-                // Obter o nome e valor da propriedade
-                var name = property.Name;
-                var value = property.GetValue(obj, null);
-
-                // Logar a propriedade
-                Debug.Log($"{new string(' ', (level + 1) * 2)}{name}: {value}");
-
-                // Se a propriedade é um objeto (e não um tipo primitivo ou string), logar recursivamente
-                if (value != null && !(value is string) && !(value is ValueType) && !(value is IEnumerable))
-                {
-                    LogProperties(value, level + 1, maxDepth);
-                }
-            }
-            catch
-            {
-                Debug.LogWarning($"{new string(' ', (level + 1) * 2)}Failed to log property: {property.Name}");
-            }
-        }
-    }
-}
 }
