@@ -5,37 +5,14 @@ using static ActionManager;
 
 public class EnemyDefenseAction : MonoBehaviour
 {
+    private EnemyDeckManager enemyDeckManager;
     public void Update()
     {
         
     }
     public void Start()
     {
-        /* var playerDeckManager = FindObjectOfType<PlayerDeckManager>();
-        var attackerBattler = new Player("Aron", 3, 5, 5);
-        var defenderBattler = new Enemy("Bolha", 1, 2, 2);
-        var actionData = new ActionData
-            {
-                Attacker = attackerBattler,
-                Defender = defenderBattler,
-                CombatAction = new CombatAction
-                {
-                    AttackerAction = new(),
-                    DefenderAction = new(),
-                },
-                CardData = new CardData(),
-            };
-
-        actionData.CardData.AttackerSelectedCards.Add(playerDeckManager.DrawCards(2));
-        actionData.CombatAction.AttackerAction.Dexterity = 2;
-        actionData.CombatAction.DefenderAction.Dexterity = 1;
-        actionData.CombatAction.AttackerAction.Attack = 3;
-        actionData.CombatAction.DefenderAction.Defense = 1;
-        actionData.CombatAction.AttackerAction.ManaCost = 4;
-        
-        ExecuteDefense(
-            actionData
-        ); */
+        enemyDeckManager = GetComponent<EnemyDeckManager>();
     }
 
     [SerializeField] private TurnManager turnManager;
@@ -94,7 +71,7 @@ public class EnemyDefenseAction : MonoBehaviour
         {
             attackerStats = data.Attacker,
             defenderStats = data.Defender,
-            cardsInHand = data.CardData.DefenderSelectedCards,
+            cardsInHand = enemyDeckManager.GetDefenseHand(),
             availableEnergy = data.Defender.Mana, // Exemplo
             attackerData = data.CombatAction.AttackerAction,
             selectedCards = new(),

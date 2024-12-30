@@ -31,6 +31,9 @@ public class EnemyDeckManager : MonoBehaviour
         defenseHand.AddRange(defenseDeck.DrawCards(count));
     }
 
+    public List<Card> GetAttackHand() => new List<Card>(attackHand);
+    public List<Card> GetDefenseHand() => new List<Card>(defenseHand);
+
     public void InitializeDecks()
     {
         Dictionary<string, (Card card, int count)> Cards = new Dictionary<string, (Card card, int count)>();
