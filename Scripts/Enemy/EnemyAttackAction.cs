@@ -18,7 +18,15 @@ public class EnemyAttackAction : MonoBehaviour
 
     public void ExecuteAttack(ActionData data)
     {
+        while (enemyDeckManager.GetAttackHand().Count < 4)
+        {
+            Debug.Log($"[Enemy] está comprando cartas de ataque");
+            enemyDeckManager.DrawToAttackHand(1);
+        }
+
+        Debug.Log($"[Enemy] está atacando >>>>>>>>>>>>>>>>>>>>>>>>>");
         EnemyContext context = BuildEnemyContext(data);
+        
 
         // Lista de estratégias organizadas por prioridade
         List<IStrategy> strategies = new List<IStrategy>
@@ -58,16 +66,19 @@ public class EnemyAttackAction : MonoBehaviour
 
             iterator++;
         }
+
+        enemyDeckManager.DiscardFromAttackHand(context.selectedCards);
         
         context.attackStrategy = DetermineAttackStrategy(context.selectedAttackStrategies);
-        Debug.Log($"EnemyAttackStrategy: {context.attackStrategy}");
+        Debug.Log($"[Enemy] AttackStrategy: {context.attackStrategy}");
         context.HasStrategyApplied = strategyApplied;
         data.CombatAction.AttackerAction.AttackType = DetermineAttackType(context);
-        Debug.Log($"EnemyAttackType: {data.CombatAction.AttackerAction.AttackType}");
+        Debug.Log($"[Enemy] AttackType: {data.CombatAction.AttackerAction.AttackType}");
     }
 
     private void SelectCard(Card card, EnemyContext context)
     {
+        Debug.Log($"[Enemy] carta selecionada {card} >>>>>>>>>>>>>>>>>>>>>>>>>");
         context.cardsInHand.Remove(card);
         context.selectedCards.Add(card);
     }
@@ -88,13 +99,14 @@ public class EnemyAttackAction : MonoBehaviour
 
     private AttackStrategy DetermineAttackStrategy(List<AttackStrategy> attackStrategies)
     {
+        Debug.Log($"[Enemy] estrategias de ataque {attackStrategies.Count} - a melhor: {attackStrategies[0]}");
         // TODO: definir de forma melhor no futuro
         return attackStrategies[0];
     }
 
     private AttackType DetermineAttackType(EnemyContext context)
     {
-        if (!context.HasStrategyApplied) return AttackType.Basic;
+        /* if (!context.HasStrategyApplied) return AttackType.Basic;
         if (HasAppliedArmourBreakStategy(context)) return AttackType.CardAttack;
         if (HasAppliedCriticalStrike(context)) return AttackType.CardAttack;
         if (HasAppliedDisruptAccuracy(context)) return AttackType.Basic;
@@ -104,7 +116,7 @@ public class EnemyAttackAction : MonoBehaviour
         if (HasAppliedStatBalancer(context)) return AttackType.Basic;
         if (HasAppliedFakeAttack(context)) return AttackType.FakeAttack;
         if (HasAppliedHealthRecovery(context)) return AttackType.Basic;
-        if (HasAppliedManaRecovery(context)) return AttackType.Basic;
+        if (HasAppliedManaRecovery(context)) return AttackType.Basic; */
         return AttackType.Basic;
     }
 

@@ -121,6 +121,6 @@ public class CardUI : MonoBehaviour
     public void ActivateSelectCard(bool status)
     {
         isSelectCardsActive = status;
-        generalUI.transform.GetChild(2).gameObject.SetActive(status);
+        generalUI.transform.GetChild(3).gameObject.SetActive(status);
     }
 }

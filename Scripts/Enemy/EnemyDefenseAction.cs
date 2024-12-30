@@ -18,6 +18,12 @@ public class EnemyDefenseAction : MonoBehaviour
     [SerializeField] private TurnManager turnManager;
     public void ExecuteDefense(ActionData data)
     {
+        while (enemyDeckManager.GetDefenseHand().Count < 4)
+        {
+            Debug.Log($"[Enemy] está comprando cartas de defesa");
+            enemyDeckManager.DrawToDefenseHand(1);
+        }
+
         EnemyContext context = BuildEnemyContext(data);
 
         // Lista de estratégias organizadas por prioridade
@@ -54,12 +60,15 @@ public class EnemyDefenseAction : MonoBehaviour
             iterator++;
         }
 
+        enemyDeckManager.DiscardFromDefenseHand(context.selectedCards);
+
         context.HasStrategyApplied = strategyApplied;
         data.CombatAction.DefenderAction.DefenseType = DetermineDefenseStrategy(context);
     }
 
     private void SelectCard(Card card, EnemyContext context)
     {
+        Debug.Log($"[Enemy] DEFESA carta selecionada {card} >>>>>>>>>>>>>>>>>>>>>>>");
         context.cardsInHand.Remove(card);
         context.selectedCards.Add(card);
     }
@@ -80,7 +89,8 @@ public class EnemyDefenseAction : MonoBehaviour
 
     private DefenseType DetermineDefenseStrategy(EnemyContext context)
     {
-        if (!context.HasStrategyApplied)
+        return DefenseType.Basic;
+        /* if (!context.HasStrategyApplied)
         {
             Debug.Log("Nenhuma estrategia aplicada");
             return DefenseType.Basic;
@@ -105,7 +115,7 @@ public class EnemyDefenseAction : MonoBehaviour
             return DefenseType.Basic;
         }
         Debug.Log("Aplicando estrategia de evade");
-        return DefenseType.Evade;
+        return DefenseType.Evade; */
     }
 
     private bool HasDefenseCard(EnemyContext context) =>

@@ -31,6 +31,25 @@ public class EnemyDeckManager : MonoBehaviour
         defenseHand.AddRange(defenseDeck.DrawCards(count));
     }
 
+    public void DiscardFromAttackHand(List<Card> cardsToDiscard)
+    {
+        foreach (Card card in cardsToDiscard)
+        {
+            attackHand.Remove(card);
+        }
+        attackDeck.Discard(cardsToDiscard);
+    }
+
+    // Descartar cartas da mão de defesa
+    public void DiscardFromDefenseHand(List<Card> cardsToDiscard)
+    {
+        foreach (Card card in cardsToDiscard)
+        {
+            defenseHand.Remove(card);
+        }
+        defenseDeck.Discard(cardsToDiscard);
+    }
+
     public List<Card> GetAttackHand() => new List<Card>(attackHand);
     public List<Card> GetDefenseHand() => new List<Card>(defenseHand);
 

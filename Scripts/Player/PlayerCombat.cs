@@ -49,6 +49,7 @@ public class  PlayerCombat : Battler
 
     public override void ModifyStat(string statName, float value)
     {
+        Debug.Log($"Aplicando efeito na Stat: >>>>>>>>>>>>>>>>>>>>>>>>>> {statName} - {value}");
         switch (statName)
         {
             case "Health": Health += (int)value; break;
@@ -65,11 +66,12 @@ public class  PlayerCombat : Battler
 
     public override void ApplyDamage(int damage)
     {
-        Health -= Mathf.Max(0, damage - AvoidedDamage());
+        Debug.Log($"[Player] levando dano! {damage}");
+        Health -= damage;
         // FEEDBACK
-        cardFeedbackManager = CardFeedbackManager.instance;
-        cardFeedbackManager.SetCardBeforeInvoke("TakeDamage");
-        cardFeedbackManager.OnCardActivation?.Invoke();
+        //cardFeedbackManager = CardFeedbackManager.instance;
+        //cardFeedbackManager.SetCardBeforeInvoke("TakeDamage");
+        //cardFeedbackManager.OnCardActivation?.Invoke();
         // CharacterBarUI
         characterBar = battlerGameobject.GetComponent<CharacterBar>();
         characterBar.UpdateUI(Health);
@@ -80,7 +82,7 @@ public class  PlayerCombat : Battler
 
     public override int AvoidedDamage()
     {
-        int avoidedDamage = (int)Math.Round(Defense*ArmourPenetration + Dexterity*Accuracy);
+        int avoidedDamage = (int)(Defense*ArmourPenetration);
         Debug.Log($"[Player] Dano evitado: {avoidedDamage}");
         return avoidedDamage;
     }
@@ -92,8 +94,6 @@ public class  PlayerCombat : Battler
 
     public override void ApplyEffect(CardEffectData effect)
     {
-        Debug.Log($"Aplicando {effect.value} de efeito em {effect.statName}");
-        Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
         // Aplica o buff imediatamente
         ModifyStat(effect.statName, effect.value);
         // StatsUI
@@ -102,7 +102,6 @@ public class  PlayerCombat : Battler
         // Adiciona o buff à lista de buffs ativos
         if (effect.effectType == Card.CardType.Buff || effect.effectType == Card.CardType.Debuff)
         {
-            Debug.Log($"Aplicando {effect.effectType} de {effect.value} de efeito em {effect.statName} com duração de {effect.duration} turnos");
             ActiveBuffs.Add(new ActiveBuff
             {
                 buffName = effect.effectName,

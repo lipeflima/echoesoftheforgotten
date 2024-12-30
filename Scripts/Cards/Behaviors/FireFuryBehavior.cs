@@ -7,7 +7,7 @@ public class FireFuryBehavior : CardBehavior
 
     public override void ExecuteAction(Card cardData, Battler target)
     {
-        Debug.Log($"Executando ação! {cardData.cardName}");
+        Debug.Log($"Executando ação! {cardData.cardName} - {target}");
         cardFeedbackManager = CardFeedbackManager.instance;
         cardFeedbackManager.SetCardBeforeInvoke(cardData.cardName);
         cardFeedbackManager.OnCardActivation?.Invoke();

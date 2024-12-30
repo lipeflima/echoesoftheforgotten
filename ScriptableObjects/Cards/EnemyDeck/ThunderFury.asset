@@ -20,7 +20,7 @@ MonoBehaviour:
   effects:
   - effectName: Dano
     statName: Health
-    value: 8
+    value: -8
     effectType: 0
     duration: 0
   cardType: 0

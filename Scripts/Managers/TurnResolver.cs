@@ -138,14 +138,16 @@ public class TurnResolver : MonoBehaviour
     public bool IsCounterAttackSuccessful(int defenderDexterity, int attackerDexterity)
     {
         // Base difficulty threshold
-        int baseThreshold = 10;
+        int baseThreshold = 16;
 
         // Calculate the threshold adjusted by the difference in dexterity
         int adjustedThreshold = baseThreshold + (attackerDexterity - defenderDexterity);
-
+        Debug.Log($"Contra ataque >>>>>>>>>>>>>>>>>>>>>>>>>");
         // Roll a d20 and add defender's dexterity
         int roll = random.Next(1, 21);
+        Debug.Log($"Roll: {roll}");
         int defenderResult = roll + defenderDexterity;
+        Debug.Log($"defenderResult {defenderResult} threshold {adjustedThreshold}");
 
         // Check if the defender's result meets or exceeds the adjusted threshold
         return defenderResult >= adjustedThreshold;
@@ -180,7 +182,7 @@ public class TurnResolver : MonoBehaviour
         int defenderBonus = defenderDexterity;
 
         // Gerar um lançamento de dado de 1 a 20
-        int roll = random.Next(1, 21);
+        int roll = random.Next(1, 13);
 
         // Calcular o resultado final do defensor
         float defenderResult = roll + defenderBonus;
