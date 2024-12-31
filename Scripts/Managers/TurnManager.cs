@@ -200,11 +200,10 @@ public class TurnManager : MonoBehaviour {
 
     private void NextTurn()
     {
-        actionData.Attacker.ModifyStat("Mana", 2);
-        actionData.Defender.ModifyStat("Mana", 2);
+        currentAttacker.ModifyStat("Mana", 2);
+        currentDefender.ModifyStat("Mana", 2);
         generalUI.SetPlayerCurrentAvailableEnergyUI(actionData.PlayerStats.Mana);
         turnCount++;
-        // AddCycleMana(currentAttacker, currentDefender);
         currentTurnIndex = (currentTurnIndex + 1) % battlers.Count;
     }
 
@@ -232,11 +231,5 @@ public class TurnManager : MonoBehaviour {
     public void SetPlayerActionCompleted()
     {
         IsPlayerActionCompleted = true;
-    }
-
-    private void AddCycleMana(Battler attacker, Battler defender)
-    {
-        attacker.Mana += cycleMana;
-        defender.Mana += cycleMana;
     }
 }

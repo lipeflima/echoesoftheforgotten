@@ -49,7 +49,6 @@ public class  PlayerCombat : Battler
 
     public override void ModifyStat(string statName, float value)
     {
-        Debug.Log($"Aplicando efeito na Stat: >>>>>>>>>>>>>>>>>>>>>>>>>> {statName} - {value}");
         switch (statName)
         {
             case "Health": Health += (int)value; break;

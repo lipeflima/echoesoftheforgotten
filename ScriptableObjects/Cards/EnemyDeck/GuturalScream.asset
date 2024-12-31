@@ -20,17 +20,22 @@ MonoBehaviour:
   effects:
   - effectName: Debuff
     statName: Attack
-    value: -3
+    value: -1
     effectType: 3
     duration: -2
   - effectName: Debuff
     statName: Defense
-    value: -3
+    value: -1
     effectType: 3
     duration: 2
   - effectName: Debuff
     statName: Dexterity
-    value: -2
+    value: -1
     effectType: 3
     duration: 2
+  - effectName: Dano
+    statName: Health
+    value: -1
+    effectType: 0
+    duration: 0
   cardType: 3

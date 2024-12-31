@@ -1,14 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class RotateCard : MonoBehaviour
+public class FlipCard : MonoBehaviour 
 {
-    
     [SerializeField] private float rotationSpeed = 720f;
     [SerializeField] private float targetRotation = 360f;
     private float totalRotation = 0f;
-
     public void Rotate(){
         StartCoroutine(RotateIndicator());
     }

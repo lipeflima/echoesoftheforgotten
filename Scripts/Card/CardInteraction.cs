@@ -1,5 +1,6 @@
 using UnityEngine.EventSystems;
 using UnityEngine;
+using System.Collections;
 
 public class CardInteraction : MonoBehaviour, IPointerClickHandler
 {

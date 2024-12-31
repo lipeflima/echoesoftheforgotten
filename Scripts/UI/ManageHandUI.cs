@@ -97,7 +97,7 @@ public class ManageHandUI : MonoBehaviour
             playerDeckManager.ShuffleDefenseDeck();
         }
         
-        deckIndicator.GetComponent<RotateCard>().Rotate();
+        deckIndicator.GetComponent<FlipCard>().Rotate();
         totalShuffleCount++;
         shuffleCount++;
     }

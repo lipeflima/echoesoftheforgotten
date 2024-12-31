@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 0.3484336, g: 0.509434, b: 0.40773112, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.08
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.2836185, g: 0.572724, b: 0.79356796, a: 1}
+  m_IndirectSpecularColor: {r: 0.5731202, g: 0.7869501, b: 0.90942687, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:

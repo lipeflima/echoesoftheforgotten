@@ -13,12 +13,6 @@ public class CharacterBar : MonoBehaviour
         UpdateUI(gameObject.GetComponent<CharacterStats>().Health);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void UpdateUI(int amount)
     {
         text.text = "HP: " + amount;
