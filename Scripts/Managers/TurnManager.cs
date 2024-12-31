@@ -162,7 +162,7 @@ public class TurnManager : MonoBehaviour {
 
             turnResolver.ResolveTurn(actionData);
             bool battleContinues = CheckIfBattleContinues(battlers);
-            if (!battleContinues) menuMain.LoadLevel();
+            if (!battleContinues) menuMain.GoToLevel(menuMain.currentLevel);
             NextTurn();
         }
     }
